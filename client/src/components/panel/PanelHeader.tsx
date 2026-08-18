@@ -1,0 +1,110 @@
+import React from 'react';
+import { IPanel, PanelStatus } from '../../types/index.js';
+import { StatusBadge } from '../common/StatusBadge.js';
+import { Button } from '../ui/Button.js';
+import { Users, PauseCircle, PlayCircle, PowerOff, Building2 } from 'lucide-react';
+
+interface PanelHeaderProps {
+  panel: IPanel;
+  onUpdateStatus: (status: PanelStatus) => void;
+}
+
+export const PanelHeader: React.FC<PanelHeaderProps> = ({ panel, onUpdateStatus }) => {
+  const interviewers = panel.interviewerIds || [];
+
+  return (
+    <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-5 space-y-4">
+      {/* Top Banner */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <div className="flex items-center gap-3">
+            <div className="w-12 h-12 rounded-2xl bg-blue-600 text-white flex items-center justify-center font-mono font-extrabold text-xl shadow-md shadow-blue-600/20">
+              {panel.panelCode}
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <h1 className="text-xl font-bold text-slate-900 tracking-tight">{panel.name}</h1>
+                <StatusBadge status={panel.status} size="md" />
+              </div>
+              {panel.roomLocation && (
+                <p className="text-xs text-slate-500 font-medium flex items-center gap-1 mt-0.5">
+                  <Building2 className="w-3.5 h-3.5 text-slate-400" /> {panel.roomLocation}
+                </p>
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* Panel Status Quick Toggles */}
+        <div className="flex items-center gap-2 flex-wrap">
+          {panel.status === 'PAUSED' ? (
+            <Button
+              variant="success"
+              size="sm"
+              onClick={() => onUpdateStatus('AVAILABLE')}
+              className="text-xs font-bold gap-1.5"
+            >
+              <PlayCircle className="w-4 h-4" /> Resume Panel
+            </Button>
+          ) : panel.status === 'AVAILABLE' ? (
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => onUpdateStatus('PAUSED')}
+              className="text-xs font-semibold gap-1.5 border-amber-300 text-amber-800 hover:bg-amber-50"
+            >
+              <PauseCircle className="w-4 h-4" /> Take a Break (Pause)
+            </Button>
+          ) : null}
+
+          {panel.status !== 'OFFLINE' && panel.status !== 'OCCUPIED' && (
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => onUpdateStatus('OFFLINE')}
+              className="text-xs text-slate-500 hover:text-slate-900"
+            >
+              <PowerOff className="w-3.5 h-3.5 mr-1" /> Go Offline
+            </Button>
+          )}
+
+          {panel.status === 'OFFLINE' && (
+            <Button
+              variant="primary"
+              size="sm"
+              onClick={() => onUpdateStatus('AVAILABLE')}
+              className="text-xs font-bold gap-1.5"
+            >
+              <PlayCircle className="w-4 h-4" /> Set Available
+            </Button>
+          )}
+        </div>
+      </div>
+
+      {/* Panel Interviewers List */}
+      <div className="pt-3 border-t border-slate-100 flex items-center gap-3 flex-wrap text-xs">
+        <span className="text-slate-400 font-semibold uppercase tracking-wider flex items-center gap-1">
+          <Users className="w-3.5 h-3.5" /> Interviewers:
+        </span>
+        {interviewers.map((int: any) => (
+          <div
+            key={int._id}
+            className="flex items-center gap-1.5 px-3 py-1 bg-slate-50 rounded-lg border border-slate-200"
+          >
+            <span className="font-semibold text-slate-900">{int.name}</span>
+            <div className="flex items-center gap-1">
+              {int.domains?.map((dom: any) => (
+                <span
+                  key={dom._id || dom}
+                  className="text-[10px] px-1.5 py-0.2 rounded bg-blue-100 text-blue-800 font-mono"
+                >
+                  {dom.name || dom}
+                </span>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};

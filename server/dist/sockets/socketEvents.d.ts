@@ -1,0 +1,22 @@
+export declare const SOCKET_EVENTS: {
+    readonly JOIN_SESSION: "session:join";
+    readonly LEAVE_SESSION: "session:leave";
+    readonly JOIN_PANEL: "panel:join";
+    readonly JOIN_STUDENT: "student:join";
+    readonly JOIN_ADMIN: "admin:join";
+    readonly QUEUE_UPDATED: "queue.updated";
+    readonly QUEUE_POSITION_UPDATED: "queue.position.updated";
+    readonly STUDENT_ASSIGNED: "student.assigned";
+    readonly STUDENT_STATUS_UPDATED: "student.status.updated";
+    readonly PANEL_UPDATED: "panel.updated";
+    readonly PANEL_STATUS_UPDATED: "panel.status.updated";
+    readonly INTERVIEW_STARTED: "interview.started";
+    readonly INTERVIEW_COMPLETED: "interview.completed";
+    readonly ASSIGNMENT_CREATED: "assignment.created";
+    readonly ASSIGNMENT_UPDATED: "assignment.updated";
+    readonly ASSIGNMENT_REASSIGNED: "assignment.reassigned";
+    readonly SESSION_UPDATED: "session.updated";
+    readonly EVENT_LOGGED: "event.logged";
+    readonly NOTIFICATION_CREATED: "notification.created";
+};
+export type SocketEventType = (typeof SOCKET_EVENTS)[keyof typeof SOCKET_EVENTS];
