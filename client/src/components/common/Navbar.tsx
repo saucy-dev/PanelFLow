@@ -13,8 +13,6 @@ import {
   History,
   Tv,
   LogOut,
-  SlidersHorizontal,
-  PlusCircle,
 } from 'lucide-react';
 
 export const Navbar: React.FC = () => {
@@ -30,7 +28,7 @@ export const Navbar: React.FC = () => {
 
   const navLinks = [
     { to: '/admin', label: 'Control Center', icon: LayoutDashboard, role: 'ADMIN' },
-    { to: '/admin/panels', label: 'Panels & Team', icon: Users, role: 'ADMIN' },
+    { to: '/admin/panels', label: 'Panels & Teams', icon: Users, role: 'ADMIN' },
     { to: '/admin/analytics', label: 'Analytics', icon: BarChart3, role: 'ADMIN' },
     { to: '/admin/audit', label: 'Audit Trail', icon: History, role: 'ADMIN' },
     { to: '/display', label: 'Waiting Room TV', icon: Tv, role: 'ALL' },
@@ -44,27 +42,24 @@ export const Navbar: React.FC = () => {
 
   return (
     <>
-      <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200/80 shadow-2xs">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
-            {/* Brand Logo & Session Tag */}
+      <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-2xs h-14 shrink-0 select-none">
+        <div className="max-w-[1720px] mx-auto px-4 sm:px-6 lg:px-8 h-full">
+          <div className="flex items-center justify-between h-full">
+            {/* Brand Logo & Nav Tabs */}
             <div className="flex items-center gap-6">
               <Link to="/" className="flex items-center gap-2.5 group">
-                <div className="w-9 h-9 rounded-xl bg-blue-600 flex items-center justify-center text-white shadow-md shadow-blue-600/20 group-hover:bg-blue-700 transition-colors">
-                  <Layers className="w-5 h-5" />
+                <div className="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center text-white shadow-2xs group-hover:bg-blue-700 transition-colors">
+                  <Layers className="w-4.5 h-4.5" />
                 </div>
-                <div>
-                  <div className="flex items-center gap-1.5">
-                    <span className="font-bold text-base tracking-tight text-slate-900">PanelFlow</span>
-                    <span className="text-[10px] font-semibold tracking-wider uppercase px-1.5 py-0.5 rounded bg-blue-50 text-blue-700 border border-blue-200">
-                      Real-Time
-                    </span>
-                  </div>
-                  <p className="text-[11px] text-slate-500 font-medium">Club Interview Manager</p>
+                <div className="flex items-center gap-2">
+                  <span className="font-extrabold text-sm tracking-tight text-slate-900">PanelFlow</span>
+                  <span className="text-[10px] font-bold tracking-wider uppercase px-1.5 py-0.2 rounded bg-blue-50 text-blue-700 border border-blue-200/80">
+                    Live
+                  </span>
                 </div>
               </Link>
 
-              {/* Navigation Links (Desktop) */}
+              {/* Navigation Links */}
               <nav className="hidden md:flex items-center gap-1">
                 {visibleLinks.map((link) => {
                   const Icon = link.icon;
@@ -73,10 +68,10 @@ export const Navbar: React.FC = () => {
                     <Link
                       key={link.to}
                       to={link.to}
-                      className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
+                      className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors ${
                         isActive
-                          ? 'bg-blue-50 text-blue-700 font-semibold'
-                          : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100/80'
+                          ? 'bg-blue-50 text-blue-700'
+                          : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100/70'
                       }`}
                     >
                       <Icon className={`w-3.5 h-3.5 ${isActive ? 'text-blue-600' : 'text-slate-400'}`} />
@@ -87,30 +82,27 @@ export const Navbar: React.FC = () => {
               </nav>
             </div>
 
-            {/* Right Side Controls */}
+            {/* Right Controls: Status, QR, User */}
             <div className="flex items-center gap-2.5">
-              {/* WebSocket Live Status */}
               <ConnectionIndicator />
 
-              {/* QR Code Action */}
               <Button
                 variant="outline"
                 size="sm"
                 onClick={() => setIsQrOpen(true)}
-                className="gap-1.5 text-xs font-semibold border-slate-200"
+                className="gap-1.5 text-xs font-semibold h-8"
               >
                 <QrCode className="w-3.5 h-3.5 text-blue-600" />
-                <span className="hidden sm:inline">Join QR Code</span>
+                <span className="hidden sm:inline">QR Code</span>
               </Button>
 
-              {/* User / Role Information */}
               {isAuthenticated && user ? (
-                <div className="flex items-center gap-2 pl-2 border-l border-slate-200">
+                <div className="flex items-center gap-2 pl-2.5 border-l border-slate-200">
                   <div className="text-right hidden sm:block">
-                    <p className="text-xs font-semibold text-slate-900 leading-tight">
+                    <p className="text-xs font-bold text-slate-900 leading-tight">
                       {user.role === 'PANEL' && panel ? `Panel ${panel.panelCode}` : user.name}
                     </p>
-                    <p className="text-[10px] uppercase tracking-wider text-slate-500 font-medium">
+                    <p className="text-[10px] uppercase tracking-wider text-slate-400 font-semibold">
                       {user.role}
                     </p>
                   </div>
@@ -120,15 +112,15 @@ export const Navbar: React.FC = () => {
                     size="icon"
                     onClick={handleLogout}
                     title="Log Out"
-                    className="text-slate-500 hover:text-red-600"
+                    className="text-slate-400 hover:text-rose-600 h-8 w-8"
                   >
-                    <LogOut className="w-4 h-4" />
+                    <LogOut className="w-3.5 h-3.5" />
                   </Button>
                 </div>
               ) : (
-                <div className="flex items-center gap-1.5 pl-2 border-l border-slate-200">
+                <div className="flex items-center gap-1.5 pl-2.5 border-l border-slate-200">
                   <Link to="/login">
-                    <Button variant="primary" size="sm" className="text-xs">
+                    <Button variant="primary" size="sm" className="text-xs h-8">
                       Sign In
                     </Button>
                   </Link>

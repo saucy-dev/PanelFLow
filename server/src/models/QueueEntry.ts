@@ -5,7 +5,7 @@ export type QueueStatus = 'WAITING' | 'ASSIGNED' | 'INTERVIEWING' | 'COMPLETED' 
 export interface IQueueEntry extends Document {
   sessionId: mongoose.Types.ObjectId;
   studentId: mongoose.Types.ObjectId;
-  queueNumber: number; // Immutable FCFS queue number
+  queueNumber: number; // Immutable sequence queue ticket number
   joinedAt: Date;
   status: QueueStatus;
   assignedPanelId?: mongoose.Types.ObjectId | null;

@@ -29,27 +29,20 @@ export async function seedDatabase() {
 
   console.log('🧹 Cleaned existing database records.');
 
-  // 1. Create Domains
+  // 1. Create Exactly the 5 Specified Domains: Android, ML, AR/VR, IOT, Web
   const domainData = [
-    { name: 'AR/VR', color: '#8B5CF6', description: 'Augmented & Virtual Reality, Unity, Unreal' },
-    { name: 'IoT', color: '#10B981', description: 'Internet of Things, Embedded systems, Hardware' },
-    { name: 'ML', color: '#EC4899', description: 'Machine Learning, AI, Deep Learning, PyTorch' },
-    { name: 'Web', color: '#3B82F6', description: 'Fullstack Web Development, React, Node.js' },
-    { name: 'Android', color: '#22C55E', description: 'Android Application Development, Kotlin, Flutter' },
-    { name: 'Cybersecurity', color: '#EF4444', description: 'Network Security, Ethical Hacking, Cryptography' },
-    { name: 'Game Development', color: '#F59E0B', description: 'Game Mechanics, Physics, 3D Modeling' },
-    { name: 'Cloud', color: '#06B6D4', description: 'AWS, GCP, Docker, Kubernetes, CI/CD' },
-    { name: 'Data Science', color: '#6366F1', description: 'Data Analytics, Visualization, SQL' },
-    { name: 'UI/UX', color: '#F97316', description: 'Design Systems, Figma, User Research' },
-    { name: 'Backend', color: '#14B8A6', description: 'Distributed Systems, Databases, Microservices' },
-    { name: 'Frontend', color: '#E11D48', description: 'Modern UI Engineering, CSS Architecture, Performance' },
+    { name: 'Android', color: '#22C55E', description: 'Android Application Development, Kotlin, Jetpack Compose' },
+    { name: 'ML', color: '#EC4899', description: 'Machine Learning, Artificial Intelligence, PyTorch, Deep Learning' },
+    { name: 'AR/VR', color: '#8B5CF6', description: 'Augmented & Virtual Reality, Unity, 3D Interactive Environments' },
+    { name: 'IOT', color: '#10B981', description: 'Internet of Things, Embedded Systems, Microcontrollers, Hardware' },
+    { name: 'Web', color: '#3B82F6', description: 'Fullstack Web Development, React, Node.js, Cloud APIs' },
   ];
 
   const createdDomains = await Domain.insertMany(domainData);
   const domainMap = new Map<string, mongoose.Types.ObjectId>();
   createdDomains.forEach((d) => domainMap.set(d.name, d._id as mongoose.Types.ObjectId));
 
-  console.log(`✅ Created ${createdDomains.length} domains.`);
+  console.log(`✅ Created ${createdDomains.length} domains: Android, ML, AR/VR, IOT, Web.`);
 
   // 2. Create Active Interview Session
   const adminPasswordHash = await bcrypt.hash('adminpassword123', 10);
@@ -62,7 +55,7 @@ export async function seedDatabase() {
 
   const session = await InterviewSession.create({
     sessionName: 'Club Recruitment 2026',
-    description: 'Annual Technical & Core Domain Recruitment Drive',
+    description: 'Annual Technical Interview Drive (Android, ML, AR/VR, IOT, Web)',
     status: 'ACTIVE',
     startedAt: new Date(),
     createdBy: adminUser._id,
@@ -78,7 +71,7 @@ export async function seedDatabase() {
   console.log(`✅ Created active session: "${session.sessionName}"`);
 
   // 3. Create Interviewers & Panels
-  // Panel P1: Rahul (AR/VR), Ankit (IoT), Priya (ML)
+  // Panel P1: Rahul (AR/VR), Ankit (IOT), Priya (ML)
   const interviewerP1_1 = await Interviewer.create({
     name: 'Rahul Sharma',
     email: 'rahul.arvr@panelflow.club',
@@ -87,7 +80,7 @@ export async function seedDatabase() {
   const interviewerP1_2 = await Interviewer.create({
     name: 'Ankit Verma',
     email: 'ankit.iot@panelflow.club',
-    domains: [domainMap.get('IoT')!],
+    domains: [domainMap.get('IOT')!],
   });
   const interviewerP1_3 = await Interviewer.create({
     name: 'Priya Joshi',
@@ -97,7 +90,7 @@ export async function seedDatabase() {
 
   const panel1 = await Panel.create({
     panelCode: 'P1',
-    name: 'Panel 1 — Advanced Tech',
+    name: 'Panel 1 — AR/VR & Emerging Tech',
     roomLocation: 'Room 301, Lab Building',
     interviewerIds: [interviewerP1_1._id, interviewerP1_2._id, interviewerP1_3._id],
     status: 'AVAILABLE',
@@ -107,7 +100,7 @@ export async function seedDatabase() {
     { panelId: panel1._id }
   );
 
-  // Panel P2: Karan (Web), Aman (Android), Riya (Cybersecurity)
+  // Panel P2: Karan (Web), Aman (Android)
   const interviewerP2_1 = await Interviewer.create({
     name: 'Karan Patel',
     email: 'karan.web@panelflow.club',
@@ -118,61 +111,61 @@ export async function seedDatabase() {
     email: 'aman.android@panelflow.club',
     domains: [domainMap.get('Android')!],
   });
-  const interviewerP2_3 = await Interviewer.create({
-    name: 'Riya Sen',
-    email: 'riya.cyber@panelflow.club',
-    domains: [domainMap.get('Cybersecurity')!],
-  });
 
   const panel2 = await Panel.create({
     panelCode: 'P2',
-    name: 'Panel 2 — Software & Security',
+    name: 'Panel 2 — Web & Android Apps',
     roomLocation: 'Room 302, Lab Building',
-    interviewerIds: [interviewerP2_1._id, interviewerP2_2._id, interviewerP2_3._id],
+    interviewerIds: [interviewerP2_1._id, interviewerP2_2._id],
     status: 'AVAILABLE',
   });
   await Interviewer.updateMany(
-    { _id: { $in: [interviewerP2_1._id, interviewerP2_2._id, interviewerP2_3._id] } },
+    { _id: { $in: [interviewerP2_1._id, interviewerP2_2._id] } },
     { panelId: panel2._id }
   );
 
-  // Panel P3: Dev (Backend), Neha (Frontend), Arjun (Game Dev)
+  // Panel P3: Dev (ML), Neha (Web)
   const interviewerP3_1 = await Interviewer.create({
     name: 'Dev Malhotra',
-    email: 'dev.backend@panelflow.club',
-    domains: [domainMap.get('Backend')!, domainMap.get('Cloud')!],
+    email: 'dev.ml@panelflow.club',
+    domains: [domainMap.get('ML')!],
   });
   const interviewerP3_2 = await Interviewer.create({
     name: 'Neha Gupta',
-    email: 'neha.frontend@panelflow.club',
-    domains: [domainMap.get('Frontend')!, domainMap.get('UI/UX')!],
-  });
-  const interviewerP3_3 = await Interviewer.create({
-    name: 'Arjun Das',
-    email: 'arjun.game@panelflow.club',
-    domains: [domainMap.get('Game Development')!],
+    email: 'neha.web@panelflow.club',
+    domains: [domainMap.get('Web')!],
   });
 
   const panel3 = await Panel.create({
     panelCode: 'P3',
-    name: 'Panel 3 — Engineering & Design',
+    name: 'Panel 3 — ML & Web Engineering',
     roomLocation: 'Room 303, Lab Building',
-    interviewerIds: [interviewerP3_1._id, interviewerP3_2._id, interviewerP3_3._id],
+    interviewerIds: [interviewerP3_1._id, interviewerP3_2._id],
     status: 'PAUSED',
   });
   await Interviewer.updateMany(
-    { _id: { $in: [interviewerP3_1._id, interviewerP3_2._id, interviewerP3_3._id] } },
+    { _id: { $in: [interviewerP3_1._id, interviewerP3_2._id] } },
     { panelId: panel3._id }
   );
 
-  // Panel P4 (Offline)
+  // Panel P4 (Reserve: Android & IOT)
+  const interviewerP4_1 = await Interviewer.create({
+    name: 'Arjun Das',
+    email: 'arjun.iot@panelflow.club',
+    domains: [domainMap.get('IOT')!, domainMap.get('Android')!],
+  });
+
   const panel4 = await Panel.create({
     panelCode: 'P4',
-    name: 'Panel 4 — Reserve Panel',
+    name: 'Panel 4 — Android & IOT Systems',
     roomLocation: 'Room 304, Lab Building',
-    interviewerIds: [],
+    interviewerIds: [interviewerP4_1._id],
     status: 'OFFLINE',
   });
+  await Interviewer.updateMany(
+    { _id: { $in: [interviewerP4_1._id] } },
+    { panelId: panel4._id }
+  );
 
   // Create Panel User accounts for direct panel logins
   await User.create([
@@ -184,7 +177,7 @@ export async function seedDatabase() {
 
   console.log('✅ Created Panels P1, P2, P3, P4 and panel interviewer accounts.');
 
-  // 4. Create Students with Domain Preferences
+  // 4. Create Sample Students with Preferences chosen strictly from: Android, ML, AR/VR, IOT, Web
   const sampleStudents = [
     {
       registrationNumber: '24BCE1001',
@@ -221,7 +214,7 @@ export async function seedDatabase() {
       phone: '+91 9876543212',
       domainPreferences: [
         { domainId: domainMap.get('ML')!, priority: 1 },
-        { domainId: domainMap.get('IoT')!, priority: 2 },
+        { domainId: domainMap.get('IOT')!, priority: 2 },
         { domainId: domainMap.get('AR/VR')!, priority: 3 },
       ],
     },
@@ -246,9 +239,9 @@ export async function seedDatabase() {
       year: 1,
       phone: '+91 9876543214',
       domainPreferences: [
-        { domainId: domainMap.get('Cybersecurity')!, priority: 1 },
+        { domainId: domainMap.get('IOT')!, priority: 1 },
         { domainId: domainMap.get('Web')!, priority: 2 },
-        { domainId: domainMap.get('IoT')!, priority: 3 },
+        { domainId: domainMap.get('ML')!, priority: 3 },
       ],
     },
     {
@@ -259,9 +252,9 @@ export async function seedDatabase() {
       year: 1,
       phone: '+91 9876543215',
       domainPreferences: [
-        { domainId: domainMap.get('Cloud')!, priority: 1 },
-        { domainId: domainMap.get('Backend')!, priority: 2 },
-        { domainId: domainMap.get('Data Science')!, priority: 3 },
+        { domainId: domainMap.get('ML')!, priority: 1 },
+        { domainId: domainMap.get('Web')!, priority: 2 },
+        { domainId: domainMap.get('Android')!, priority: 3 },
       ],
     },
   ];
@@ -300,7 +293,7 @@ export async function seedDatabase() {
     });
   }
 
-  console.log(`✅ Seeded ${sampleStudents.length} candidates in the FCFS waiting queue.`);
+  console.log(`✅ Seeded ${sampleStudents.length} candidates in the live waiting queue.`);
   console.log('🎉 Database seed completed successfully!');
 }
 

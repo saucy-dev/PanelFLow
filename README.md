@@ -1,6 +1,6 @@
 # PanelFlow — Real-Time Club Interview Management System
 
-A production-grade, real-time web application engineered for high-traffic university club recruitments, hackathon team screenings, and multi-panel interview sessions. PanelFlow replaces manual paper-based queues with an authoritative real-time control center, immutable FCFS queue ordering, human-in-the-loop domain matching, atomic race-condition concurrency protection, Google Sheets integration, and live WebSocket multi-screen synchronization.
+A production-grade, real-time web application engineered for high-traffic university club recruitments, hackathon team screenings, and multi-panel interview sessions. PanelFlow replaces manual paper-based queues with an authoritative real-time control center, immutable sequential queue ordering, human-in-the-loop domain matching, atomic race-condition concurrency protection, Google Sheets integration, and live WebSocket multi-screen synchronization.
 
 ---
 
@@ -8,8 +8,8 @@ A production-grade, real-time web application engineered for high-traffic univer
 
 > **This is NOT an automatic matchmaking system. The administrator is the final decision-maker.**
 
-1. **FCFS Arrival Queue**: Students enter the queue in First-Come, First-Served order and receive an **immutable queue number** (e.g. `#1`, `#2`, `#3`) that never changes or gets renumbered.
-2. **Human-in-the-Loop Matching**: FCFS defines queue position, but the coordinator has full discretion to skip or triage candidates based on live panel domain availability (e.g. assigning `#3 Priya (ML)` to an available `P1 (ML)` panel while `#1 Ayush (AR/VR)` waits for `P2 (AR/VR)` to become free).
+1. **Live Arrival Queue**: Students enter the queue in sequential order and receive an **immutable queue number** (e.g. `#1`, `#2`, `#3`) that never changes or gets renumbered.
+2. **Human-in-the-Loop Matching**: Queue position defines arrival order, but the coordinator has full discretion to skip or triage candidates based on live panel domain availability (e.g. assigning `#3 Priya (ML)` to an available `P1 (ML)` panel while `#1 Ayush (AR/VR)` waits for `P2 (AR/VR)` to become free).
 3. **Informational Match Scoring**: Deterministic matching indicators (`STRONG MATCH`, `GOOD MATCH`, `NO MATCH`) highlight compatibility with panel interviewers without forcing automated assignments.
 4. **Authoritative Concurrency Protection**: Multi-admin race conditions are prevented at the database level using atomic conditional operations (`findOneAndUpdate` with `status: 'AVAILABLE'`). If two coordinators try to assign different students to the same panel simultaneously, exactly one succeeds and the other receives a descriptive `409 Conflict`.
 
@@ -28,7 +28,7 @@ graph TD
 
     subgraph Backend [Node.js + Express + Socket.IO Server]
         Auth[Auth & RBAC Middleware<br/>JWT + HTTP-Only Cookies]
-        QueueService[Queue & FCFS Engine]
+        QueueService[Queue & Session Engine]
         AssignService[Assignment Service<br/>Atomic Concurrency Locks]
         MatchEngine[Deterministic Domain Matching Engine]
         SheetService[Google Sheets & CSV Importer]
@@ -70,7 +70,7 @@ graph TD
 
 | Role / Surface | Route | Capabilities |
 |---|---|---|
-| **Admin Control Center** | `/admin` | Live 2-pane split view (FCFS Queue & Panels Grid), Call Next candidate modal, 1-click domain match assignment, reassignment, cancellation, session control, Google Sheets import, QR code generation. |
+| **Admin Control Center** | `/admin` | Live 2-pane split view (Waiting Queue & Panels Grid), Call Next candidate modal, 1-click domain match assignment, reassignment, cancellation, session control, Google Sheets import, QR code generation. |
 | **Panel Workstation** | `/panel/:panelCode` | Panel status control (`AVAILABLE`, `OCCUPIED`, `PAUSED`, `OFFLINE`), live assigned candidate card with ordered domain preferences, running interview stopwatch timer, 1-click `[INTERVIEW COMPLETE]` action. |
 | **Candidate Mobile QR** | `/interview/join`<br>`/interview/queue/:id` | Mobile-first QR entry, instant pre-imported registration number lookup, domain preference ranking, real-time ticket with live count ahead, pulsating assignment banner with panel room & interviewer info. |
 | **Public Waiting TV Display** | `/display` | Split-screen kiosk for hall projectors showing **NOW CALLING** active interviews and **UP NEXT** waiting queue in real time. |
@@ -166,7 +166,7 @@ When started for the first time, PanelFlow automatically seeds the database with
 
 ## 8. Running Automated Tests
 
-Run the test suite verifying FCFS ordering, duplicate protection, atomic concurrency locking (409 Conflict), interview lifecycle completion, and RBAC authorization:
+Run the test suite verifying sequential ordering, duplicate protection, atomic concurrency locking (409 Conflict), interview lifecycle completion, and RBAC authorization:
 ```bash
 npm test
 ```

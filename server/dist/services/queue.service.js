@@ -14,7 +14,7 @@ const socketHandler_js_1 = require("../sockets/socketHandler.js");
 const socketEvents_js_1 = require("../sockets/socketEvents.js");
 class QueueService {
     /**
-     * Register/Lookup Student and Join Queue with FCFS Number
+     * Register/Lookup Student and Join Live Waiting Queue
      */
     static async joinQueue(input, actor) {
         const session = input.sessionId
@@ -83,7 +83,7 @@ class QueueService {
                 message: `You are already in the queue at position #${activeEntry.queueNumber}.`,
             };
         }
-        // 3. Determine Next Immutable FCFS Queue Number
+        // 3. Determine Next Queue Number
         const highestEntry = await QueueEntry_js_1.QueueEntry.findOne({ sessionId: session._id }).sort({ queueNumber: -1 });
         const nextQueueNumber = highestEntry ? highestEntry.queueNumber + 1 : 1;
         // 4. Create Queue Entry

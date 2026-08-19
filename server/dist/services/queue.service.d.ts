@@ -16,7 +16,7 @@ export interface JoinQueueInput {
 }
 export declare class QueueService {
     /**
-     * Register/Lookup Student and Join Queue with FCFS Number
+     * Register/Lookup Student and Join Live Waiting Queue
      */
     static joinQueue(input: JoinQueueInput, actor?: {
         id?: string;

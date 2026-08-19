@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { IInterviewSession, ISessionAnalytics } from '../../types/index.js';
 import { Button } from '../ui/Button.js';
-import { Play, Pause, FileSpreadsheet, QrCode, PhoneCall, Sliders, RefreshCw, BarChart2 } from 'lucide-react';
+import { FileSpreadsheet, QrCode, PhoneCall, RefreshCw, Layers } from 'lucide-react';
 import { QRCodeModal } from '../common/QRCodeModal.js';
 import { SheetsImportModal } from './SheetsImportModal.js';
 
@@ -18,7 +18,6 @@ export const SessionControlBar: React.FC<SessionControlBarProps> = ({
   analytics,
   onCallNext,
   onRefresh,
-  onUpdateSessionStatus,
 }) => {
   const [isQrOpen, setIsQrOpen] = useState(false);
   const [isImportOpen, setIsImportOpen] = useState(false);
@@ -27,20 +26,20 @@ export const SessionControlBar: React.FC<SessionControlBarProps> = ({
 
   return (
     <>
-      <div className="bg-white rounded-2xl border border-slate-200/80 shadow-xs p-4 flex flex-col md:flex-row md:items-center justify-between gap-4">
-        {/* Left: Session Title, Status Dot, Quick Metrics */}
-        <div className="space-y-1">
-          <div className="flex items-center gap-2.5 flex-wrap">
-            <h1 className="text-lg font-bold text-slate-900 tracking-tight">{session.sessionName}</h1>
+      <div className="bg-white rounded-xl border border-slate-200 shadow-2xs px-4 py-3 shrink-0 flex flex-col md:flex-row md:items-center justify-between gap-3 select-none">
+        {/* Left: Session Title & Metrics */}
+        <div className="flex items-center gap-4 flex-wrap">
+          <div className="flex items-center gap-2">
+            <h1 className="text-sm font-bold text-slate-900 tracking-tight">{session.sessionName}</h1>
             <span
-              className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-bold border select-none ${
+              className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[11px] font-bold border ${
                 isActive
-                  ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
-                  : 'bg-amber-50 text-amber-700 border-amber-200'
+                  ? 'bg-emerald-50 text-emerald-700 border-emerald-200/80'
+                  : 'bg-amber-50 text-amber-700 border-amber-200/80'
               }`}
             >
               <span
-                className={`w-2 h-2 rounded-full ${
+                className={`w-1.5 h-1.5 rounded-full ${
                   isActive ? 'bg-emerald-500 animate-pulse' : 'bg-amber-500'
                 }`}
               />
@@ -48,81 +47,85 @@ export const SessionControlBar: React.FC<SessionControlBarProps> = ({
             </span>
           </div>
 
-          <div className="flex items-center gap-3 text-xs text-slate-500 font-medium">
+          <div className="hidden sm:flex items-center gap-2.5 text-xs text-slate-500 pl-3 border-l border-slate-200">
             <span>
-              Queue:{' '}
               <strong className="text-slate-900 font-bold font-mono">
                 {analytics?.queue.WAITING ?? 0}
               </strong>{' '}
-              waiting
+              Waiting
             </span>
-            <span>•</span>
+            <span className="text-slate-300">•</span>
             <span>
-              Panels:{' '}
+              <strong className="text-rose-600 font-bold font-mono">
+                {analytics?.panels.OCCUPIED ?? 0}
+              </strong>{' '}
+              In Interview
+            </span>
+            <span className="text-slate-300">•</span>
+            <span>
               <strong className="text-emerald-700 font-bold font-mono">
                 {analytics?.panels.AVAILABLE ?? 0}
               </strong>{' '}
-              available
+              Panels Free
             </span>
-            <span>•</span>
+            <span className="text-slate-300">•</span>
             <span>
-              Completed:{' '}
               <strong className="text-teal-700 font-bold font-mono">
                 {analytics?.queue.COMPLETED ?? 0}
-              </strong>
+              </strong>{' '}
+              Completed
             </span>
           </div>
         </div>
 
-        {/* Right: Quick Action Buttons */}
+        {/* Right: Actions */}
         <div className="flex items-center gap-2 flex-wrap">
-          {/* Smart "Call Next" Candidate Trigger */}
+          {/* Call Next Button */}
           <Button
-            size="md"
+            size="sm"
             variant="primary"
             onClick={onCallNext}
-            className="gap-2 shadow-sm font-bold bg-blue-600 hover:bg-blue-700"
+            className="gap-1.5 font-bold text-xs h-8 shadow-2xs"
           >
-            <PhoneCall className="w-4 h-4" />
+            <PhoneCall className="w-3.5 h-3.5" />
             <span>Call Next Candidate</span>
           </Button>
 
-          {/* Import Sheets / CSV Button */}
+          {/* Import Button */}
           <Button
-            size="md"
+            size="sm"
             variant="outline"
             onClick={() => setIsImportOpen(true)}
-            className="gap-1.5 border-slate-200 font-medium text-xs"
+            className="gap-1.5 text-xs font-semibold h-8"
           >
-            <FileSpreadsheet className="w-4 h-4 text-emerald-600" />
-            <span>Import Sheets</span>
+            <FileSpreadsheet className="w-3.5 h-3.5 text-emerald-600" />
+            <span className="hidden sm:inline">Import Sheets</span>
           </Button>
 
-          {/* QR Code Button */}
+          {/* QR Button */}
           <Button
-            size="md"
+            size="sm"
             variant="outline"
             onClick={() => setIsQrOpen(true)}
-            className="gap-1.5 border-slate-200 font-medium text-xs"
+            className="gap-1.5 text-xs font-semibold h-8"
           >
-            <QrCode className="w-4 h-4 text-blue-600" />
-            <span>QR Code</span>
+            <QrCode className="w-3.5 h-3.5 text-blue-600" />
+            <span className="hidden sm:inline">QR Code</span>
           </Button>
 
-          {/* Refresh Manual Button */}
+          {/* Refresh */}
           <Button
             size="icon"
             variant="ghost"
             onClick={onRefresh}
-            title="Refresh authoritative state"
-            className="text-slate-500 hover:text-slate-900 border border-slate-200"
+            title="Refresh state"
+            className="text-slate-400 hover:text-slate-800 border border-slate-200 h-8 w-8"
           >
-            <RefreshCw className="w-4 h-4" />
+            <RefreshCw className="w-3.5 h-3.5" />
           </Button>
         </div>
       </div>
 
-      {/* Modals */}
       <QRCodeModal isOpen={isQrOpen} onClose={() => setIsQrOpen(false)} sessionName={session.sessionName} />
       <SheetsImportModal
         isOpen={isImportOpen}

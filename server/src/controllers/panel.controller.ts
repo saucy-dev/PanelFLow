@@ -41,4 +41,53 @@ export class PanelController {
       return ApiResponse.error(res, error.message || 'Failed to create panel', error.statusCode || 400);
     }
   }
+
+  static async updatePanelDetails(req: Request, res: Response) {
+    try {
+      const panelId = req.params.id as string;
+      const actor = req.user ? { id: req.user.userId, name: req.user.email, role: req.user.role } : undefined;
+
+      const panel = await PanelService.updatePanelDetails(panelId, req.body, actor);
+      return ApiResponse.success(res, panel, 'Panel details updated successfully');
+    } catch (error: any) {
+      return ApiResponse.error(res, error.message || 'Failed to update panel details', error.statusCode || 400);
+    }
+  }
+
+  static async addInterviewer(req: Request, res: Response) {
+    try {
+      const panelId = req.params.id as string;
+      const actor = req.user ? { id: req.user.userId, name: req.user.email, role: req.user.role } : undefined;
+
+      const panel = await PanelService.addInterviewer(panelId, req.body, actor);
+      return ApiResponse.success(res, panel, 'Interviewer added to panel successfully', 201);
+    } catch (error: any) {
+      return ApiResponse.error(res, error.message || 'Failed to add interviewer', error.statusCode || 400);
+    }
+  }
+
+  static async updateInterviewer(req: Request, res: Response) {
+    try {
+      const interviewerId = req.params.interviewerId as string;
+      const actor = req.user ? { id: req.user.userId, name: req.user.email, role: req.user.role } : undefined;
+
+      const result = await PanelService.updateInterviewer(interviewerId, req.body, actor);
+      return ApiResponse.success(res, result, 'Interviewer updated successfully');
+    } catch (error: any) {
+      return ApiResponse.error(res, error.message || 'Failed to update interviewer', error.statusCode || 400);
+    }
+  }
+
+  static async removeInterviewer(req: Request, res: Response) {
+    try {
+      const panelId = req.params.id as string;
+      const interviewerId = req.params.interviewerId as string;
+      const actor = req.user ? { id: req.user.userId, name: req.user.email, role: req.user.role } : undefined;
+
+      const panel = await PanelService.removeInterviewerFromPanel(panelId, interviewerId, actor);
+      return ApiResponse.success(res, panel, 'Interviewer removed from panel successfully');
+    } catch (error: any) {
+      return ApiResponse.error(res, error.message || 'Failed to remove interviewer', error.statusCode || 400);
+    }
+  }
 }

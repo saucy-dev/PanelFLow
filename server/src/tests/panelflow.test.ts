@@ -30,8 +30,8 @@ afterAll(async () => {
   await disconnectDB();
 });
 
-describe('1. Student Registration & FCFS Queue', () => {
-  it('should allow a new student to join queue and receive next immutable FCFS number', async () => {
+describe('1. Student Registration & Live Waiting Queue', () => {
+  it('should allow a new student to join queue and receive next immutable queue number', async () => {
     const domains = await Domain.find().limit(2);
 
     const res = await request(app)

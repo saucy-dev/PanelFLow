@@ -16,7 +16,7 @@ export const AnalyticsPage: React.FC = () => {
     <div className="min-h-screen bg-slate-50 flex flex-col">
       <Navbar />
 
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+      <main className="flex-1 max-w-[1720px] w-full mx-auto px-4 sm:px-6 lg:px-8 py-5 space-y-5">
         <div>
           <h1 className="text-2xl font-bold text-slate-900 tracking-tight">Session Analytics & Metrics</h1>
           <p className="text-xs text-slate-500 mt-0.5">

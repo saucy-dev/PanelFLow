@@ -23,7 +23,7 @@ export interface JoinQueueInput {
 
 export class QueueService {
   /**
-   * Register/Lookup Student and Join Queue with FCFS Number
+   * Register/Lookup Student and Join Live Waiting Queue
    */
   static async joinQueue(input: JoinQueueInput, actor?: { id?: string; name?: string; role?: any }) {
     const session = input.sessionId
@@ -102,7 +102,7 @@ export class QueueService {
       };
     }
 
-    // 3. Determine Next Immutable FCFS Queue Number
+    // 3. Determine Next Queue Number
     const highestEntry = await QueueEntry.findOne({ sessionId: session._id }).sort({ queueNumber: -1 });
     const nextQueueNumber = highestEntry ? highestEntry.queueNumber + 1 : 1;
 

@@ -42,6 +42,51 @@ class PanelController {
             return apiResponse_js_1.ApiResponse.error(res, error.message || 'Failed to create panel', error.statusCode || 400);
         }
     }
+    static async updatePanelDetails(req, res) {
+        try {
+            const panelId = req.params.id;
+            const actor = req.user ? { id: req.user.userId, name: req.user.email, role: req.user.role } : undefined;
+            const panel = await panel_service_js_1.PanelService.updatePanelDetails(panelId, req.body, actor);
+            return apiResponse_js_1.ApiResponse.success(res, panel, 'Panel details updated successfully');
+        }
+        catch (error) {
+            return apiResponse_js_1.ApiResponse.error(res, error.message || 'Failed to update panel details', error.statusCode || 400);
+        }
+    }
+    static async addInterviewer(req, res) {
+        try {
+            const panelId = req.params.id;
+            const actor = req.user ? { id: req.user.userId, name: req.user.email, role: req.user.role } : undefined;
+            const panel = await panel_service_js_1.PanelService.addInterviewer(panelId, req.body, actor);
+            return apiResponse_js_1.ApiResponse.success(res, panel, 'Interviewer added to panel successfully', 201);
+        }
+        catch (error) {
+            return apiResponse_js_1.ApiResponse.error(res, error.message || 'Failed to add interviewer', error.statusCode || 400);
+        }
+    }
+    static async updateInterviewer(req, res) {
+        try {
+            const interviewerId = req.params.interviewerId;
+            const actor = req.user ? { id: req.user.userId, name: req.user.email, role: req.user.role } : undefined;
+            const result = await panel_service_js_1.PanelService.updateInterviewer(interviewerId, req.body, actor);
+            return apiResponse_js_1.ApiResponse.success(res, result, 'Interviewer updated successfully');
+        }
+        catch (error) {
+            return apiResponse_js_1.ApiResponse.error(res, error.message || 'Failed to update interviewer', error.statusCode || 400);
+        }
+    }
+    static async removeInterviewer(req, res) {
+        try {
+            const panelId = req.params.id;
+            const interviewerId = req.params.interviewerId;
+            const actor = req.user ? { id: req.user.userId, name: req.user.email, role: req.user.role } : undefined;
+            const panel = await panel_service_js_1.PanelService.removeInterviewerFromPanel(panelId, interviewerId, actor);
+            return apiResponse_js_1.ApiResponse.success(res, panel, 'Interviewer removed from panel successfully');
+        }
+        catch (error) {
+            return apiResponse_js_1.ApiResponse.error(res, error.message || 'Failed to remove interviewer', error.statusCode || 400);
+        }
+    }
 }
 exports.PanelController = PanelController;
 //# sourceMappingURL=panel.controller.js.map

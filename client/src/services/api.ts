@@ -60,6 +60,12 @@ export const api = {
       method: 'POST',
       body: body instanceof FormData ? body : JSON.stringify(body),
     }),
+  put: <T>(url: string, body?: any, options?: RequestInit) =>
+    request<T>(url, {
+      ...options,
+      method: 'PUT',
+      body: JSON.stringify(body),
+    }),
   patch: <T>(url: string, body?: any, options?: RequestInit) =>
     request<T>(url, {
       ...options,

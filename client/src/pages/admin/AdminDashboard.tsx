@@ -112,11 +112,13 @@ export const AdminDashboard: React.FC = () => {
   const nextWaitingCandidate = queue.find((q) => q.status === 'WAITING') || null;
 
   return (
-    <div className="min-h-screen bg-slate-100/70 flex flex-col">
+    <div className="h-screen w-screen flex flex-col overflow-hidden bg-slate-100/70 select-none">
+      {/* Top Fixed Navbar */}
       <Navbar />
 
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-5 space-y-5">
-        {/* Session Control Toolbar */}
+      {/* Main Full-Height Fluid Workspace */}
+      <main className="flex-1 min-h-0 max-w-[1720px] w-full mx-auto px-3 sm:px-6 lg:px-8 py-3 flex flex-col gap-3 overflow-hidden">
+        {/* Session Toolbar */}
         {session && (
           <SessionControlBar
             session={session}
@@ -130,9 +132,9 @@ export const AdminDashboard: React.FC = () => {
         )}
 
         {/* Two-Pane Desktop Control Center: Queue (Left) & Panels (Right) */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 h-[calc(100vh-210px)] min-h-[580px]">
+        <div className="flex-1 min-h-0 grid grid-cols-1 lg:grid-cols-12 gap-3.5 overflow-hidden">
           {/* Waiting Queue Table (Left - 6 Cols) */}
-          <div className="lg:col-span-6 h-full">
+          <div className="lg:col-span-6 h-full min-h-0 flex flex-col overflow-hidden">
             <QueueView
               queue={queue}
               availablePanels={availablePanels}
@@ -145,7 +147,7 @@ export const AdminDashboard: React.FC = () => {
           </div>
 
           {/* Panels Grid (Right - 6 Cols) */}
-          <div className="lg:col-span-6 h-full">
+          <div className="lg:col-span-6 h-full min-h-0 flex flex-col overflow-hidden">
             <PanelGrid
               panels={panels}
               onSelectPanel={(panel) => setSelectedPanel(panel)}

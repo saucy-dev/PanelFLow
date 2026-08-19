@@ -25,19 +25,39 @@ export declare const createPanelSchema: z.ZodObject<{
     roomLocation?: string | undefined;
     interviewerIds?: string[] | undefined;
 }>;
-export declare const createInterviewerSchema: z.ZodObject<{
+export declare const updatePanelDetailsSchema: z.ZodObject<{
+    name: z.ZodOptional<z.ZodString>;
+    roomLocation: z.ZodOptional<z.ZodString>;
+}, "strip", z.ZodTypeAny, {
+    name?: string | undefined;
+    roomLocation?: string | undefined;
+}, {
+    name?: string | undefined;
+    roomLocation?: string | undefined;
+}>;
+export declare const addInterviewerSchema: z.ZodObject<{
     name: z.ZodString;
     email: z.ZodString;
     domains: z.ZodArray<z.ZodString, "many">;
-    panelId: z.ZodNullable<z.ZodOptional<z.ZodString>>;
 }, "strip", z.ZodTypeAny, {
     name: string;
     email: string;
     domains: string[];
-    panelId?: string | null | undefined;
 }, {
     name: string;
     email: string;
     domains: string[];
-    panelId?: string | null | undefined;
+}>;
+export declare const updateInterviewerSchema: z.ZodObject<{
+    name: z.ZodOptional<z.ZodString>;
+    email: z.ZodOptional<z.ZodString>;
+    domains: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
+}, "strip", z.ZodTypeAny, {
+    name?: string | undefined;
+    email?: string | undefined;
+    domains?: string[] | undefined;
+}, {
+    name?: string | undefined;
+    email?: string | undefined;
+    domains?: string[] | undefined;
 }>;

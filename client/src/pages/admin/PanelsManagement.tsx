@@ -1,19 +1,20 @@
 import React, { useState } from 'react';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useQuery, useMutation } from '@tanstack/react-query';
 import { panelService } from '../../services/panel.service.js';
-import { adminService } from '../../services/admin.service.js';
 import { Navbar } from '../../components/common/Navbar.js';
 import { Button } from '../../components/ui/Button.js';
 import { Input } from '../../components/ui/Input.js';
 import { Dialog } from '../../components/ui/Dialog.js';
 import { StatusBadge } from '../../components/common/StatusBadge.js';
+import { EditPanelModal } from '../../components/common/EditPanelModal.js';
 import { LoadingSpinner } from '../../components/common/LoadingSpinner.js';
-import { Users, Plus, Building2, UserPlus, Shield } from 'lucide-react';
+import { IPanel } from '../../types/index.js';
+import { Users, Plus, Building2, Settings2 } from 'lucide-react';
 import { toast } from 'sonner';
 
 export const PanelsManagement: React.FC = () => {
-  const queryClient = useQueryClient();
   const [isAddPanelOpen, setIsAddPanelOpen] = useState(false);
+  const [selectedPanelToEdit, setSelectedPanelToEdit] = useState<IPanel | null>(null);
   const [panelCode, setPanelCode] = useState('');
   const [name, setName] = useState('');
   const [roomLocation, setRoomLocation] = useState('');
@@ -21,11 +22,6 @@ export const PanelsManagement: React.FC = () => {
   const { data: panels = [], isLoading, refetch } = useQuery({
     queryKey: ['panels-manage'],
     queryFn: panelService.getAllPanels,
-  });
-
-  const { data: domains = [] } = useQuery({
-    queryKey: ['domains'],
-    queryFn: adminService.getAllDomains,
   });
 
   const createPanelMutation = useMutation({
@@ -54,7 +50,7 @@ export const PanelsManagement: React.FC = () => {
     <div className="min-h-screen bg-slate-50 flex flex-col">
       <Navbar />
 
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+      <main className="flex-1 max-w-[1720px] w-full mx-auto px-4 sm:px-6 lg:px-8 py-5 space-y-5">
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
@@ -107,9 +103,18 @@ export const PanelsManagement: React.FC = () => {
 
                   {/* Interviewers */}
                   <div className="space-y-2 pt-2 border-t border-slate-100">
-                    <p className="text-[11px] font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1">
-                      <Users className="w-3 h-3" /> Interviewers ({interviewers.length})
-                    </p>
+                    <div className="flex items-center justify-between">
+                      <p className="text-[11px] font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1">
+                        <Users className="w-3 h-3" /> Interviewers ({interviewers.length})
+                      </p>
+                      <button
+                        onClick={() => setSelectedPanelToEdit(panel)}
+                        className="text-[10px] font-semibold text-blue-600 hover:text-blue-700 cursor-pointer"
+                      >
+                        + Add / Edit
+                      </button>
+                    </div>
+
                     <div className="space-y-1.5">
                       {interviewers.length === 0 ? (
                         <p className="text-xs text-slate-400 italic">No interviewers assigned</p>
@@ -137,10 +142,20 @@ export const PanelsManagement: React.FC = () => {
                   </div>
                 </div>
 
-                <div className="pt-2 text-right">
+                <div className="pt-3 border-t border-slate-100 flex items-center justify-between">
                   <span className="text-[11px] font-mono text-slate-400">
                     ID: {panel._id.slice(-6)}
                   </span>
+
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() => setSelectedPanelToEdit(panel)}
+                    className="text-xs h-7.5 gap-1.5 font-semibold border-slate-200"
+                  >
+                    <Settings2 className="w-3.5 h-3.5 text-slate-600" />
+                    <span>Edit Panel & Team</span>
+                  </Button>
                 </div>
               </div>
             );
@@ -205,6 +220,14 @@ export const PanelsManagement: React.FC = () => {
           </div>
         </form>
       </Dialog>
+
+      {/* Edit Panel & Team Modal */}
+      <EditPanelModal
+        panel={selectedPanelToEdit}
+        isOpen={!!selectedPanelToEdit}
+        onClose={() => setSelectedPanelToEdit(null)}
+        onSuccess={() => refetch()}
+      />
     </div>
   );
 };

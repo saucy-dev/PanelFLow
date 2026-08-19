@@ -38,15 +38,15 @@ export const CallNextModal: React.FC<CallNextModalProps> = ({
       isOpen={isOpen}
       onClose={onClose}
       title="Call Next Candidate"
-      description="Review the next student in FCFS arrival order and select a panel for interview assignment."
-      maxWidth="lg"
+      description="Review the next candidate in the queue and select a panel for interview assignment."
+      maxWidth="md"
     >
-      <div className="space-y-5">
-        {/* Next Student Highlight Card */}
-        <div className="bg-blue-50/60 border border-blue-200/80 rounded-xl p-4 space-y-3">
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-bold uppercase tracking-wider text-blue-700">
-              Next in FCFS Queue
+      <div className="space-y-4">
+        {/* Candidate Profile Highlight */}
+        <div className="bg-gradient-to-r from-blue-50 to-indigo-50/50 p-4 rounded-xl border border-blue-200/80 space-y-3">
+          <div className="flex items-start justify-between">
+            <span className="text-[10px] font-bold uppercase tracking-wider text-blue-700 bg-blue-100/80 px-2 py-0.5 rounded-md">
+              Next in Waiting Queue
             </span>
             <span className="text-xs font-mono font-bold px-2 py-0.5 bg-blue-600 text-white rounded">
               Ticket {formatQueueNumber(nextEntry.queueNumber)}
