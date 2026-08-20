@@ -49,14 +49,14 @@ export const QueueView: React.FC<QueueViewProps> = ({
   const waitingCount = queue.filter((q) => q.status === 'WAITING').length;
 
   return (
-    <div className="bg-white rounded-xl border border-slate-200 shadow-2xs flex flex-col h-full overflow-hidden">
+    <div className="bg-white/90 dark:bg-[#0F1626]/90 backdrop-blur-md rounded-2xl border border-[#FFDDB0] dark:border-slate-800 shadow-2xs flex flex-col h-full overflow-hidden transition-colors duration-150">
       {/* Queue Header & Filters */}
-      <div className="p-3.5 border-b border-slate-100 bg-slate-50/60 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
+      <div className="p-3.5 border-b border-[#FFDDB0] dark:border-slate-800 bg-[#FFFCE1]/70 dark:bg-slate-900/60 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
         <div className="flex items-center gap-2">
-          <h2 className="text-xs font-extrabold text-slate-800 uppercase tracking-wider">
+          <h2 className="text-xs font-extrabold text-slate-900 dark:text-white uppercase tracking-wider">
             Waiting Queue
           </h2>
-          <span className="bg-blue-100 text-blue-800 text-[11px] font-bold px-2 py-0.2 rounded-full">
+          <span className="bg-[#FFBE91] text-amber-950 text-[11px] font-bold px-2 py-0.2 rounded-full border border-[#EA9661]/40">
             {waitingCount} Waiting
           </span>
         </div>
@@ -70,17 +70,19 @@ export const QueueView: React.FC<QueueViewProps> = ({
               placeholder="Search candidate..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="h-7.5 pl-8 pr-2.5 text-xs bg-white border border-slate-200 rounded-lg focus:outline-none focus:border-blue-500 w-32 sm:w-40"
+              className="h-7.5 pl-8 pr-2.5 text-xs bg-white dark:bg-[#111726] border border-[#FFDDB0] dark:border-slate-700 text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 rounded-lg focus:outline-none focus:border-[#FFBE91] focus:ring-1 focus:ring-[#FFBE91] w-32 sm:w-40"
             />
           </div>
 
-          <div className="flex bg-slate-200/70 p-0.5 rounded-lg text-[11px] font-semibold text-slate-600">
+          <div className="flex bg-[#FFDDB0]/50 dark:bg-slate-800/80 p-0.5 rounded-lg text-[11px] font-semibold text-slate-700 dark:text-slate-300">
             {(['WAITING', 'ASSIGNED', 'ALL'] as const).map((st) => (
               <button
                 key={st}
                 onClick={() => setStatusFilter(st)}
                 className={`px-2.5 py-0.5 rounded-md transition-all cursor-pointer ${
-                  statusFilter === st ? 'bg-white text-slate-900 shadow-2xs' : 'hover:text-slate-900'
+                  statusFilter === st
+                    ? 'bg-white dark:bg-[#111726] text-amber-950 dark:text-white font-bold shadow-2xs'
+                    : 'hover:text-slate-900 dark:hover:text-white'
                 }`}
               >
                 {st === 'ALL' ? 'All' : st.charAt(0) + st.slice(1).toLowerCase()}
@@ -91,7 +93,7 @@ export const QueueView: React.FC<QueueViewProps> = ({
       </div>
 
       {/* Queue Items */}
-      <div className="flex-1 overflow-y-auto divide-y divide-slate-100">
+      <div className="flex-1 overflow-y-auto divide-y divide-[#FFDDB0]/40 dark:divide-slate-800">
         {filteredQueue.length === 0 ? (
           <div className="p-8">
             <EmptyState
@@ -124,11 +126,11 @@ export const QueueView: React.FC<QueueViewProps> = ({
             return (
               <div
                 key={entry._id}
-                className="p-3.5 hover:bg-slate-50/70 transition-colors flex flex-col sm:flex-row sm:items-center justify-between gap-3 group"
+                className="p-3.5 hover:bg-[#FFFCE1]/50 dark:hover:bg-slate-900/50 transition-colors flex flex-col sm:flex-row sm:items-center justify-between gap-3 group"
               >
                 {/* Left info */}
                 <div className="flex items-start gap-3 min-w-0">
-                  <div className="w-8 h-8 rounded-lg bg-slate-900 text-white flex items-center justify-center shrink-0 font-mono font-bold text-xs">
+                  <div className="w-8 h-8 rounded-xl bg-[#FFBE91] text-amber-950 border border-[#EA9661]/40 flex items-center justify-center shrink-0 font-mono font-bold text-xs shadow-2xs">
                     {formatQueueNumber(entry.queueNumber)}
                   </div>
 
@@ -136,14 +138,14 @@ export const QueueView: React.FC<QueueViewProps> = ({
                     <div className="flex items-center gap-2 flex-wrap">
                       <button
                         onClick={() => onSelectStudent(entry)}
-                        className="text-xs font-bold text-slate-900 hover:text-blue-600 transition-colors text-left truncate cursor-pointer hover:underline"
+                        className="text-xs font-bold text-slate-900 dark:text-white hover:text-amber-900 dark:hover:text-[#FFBE91] transition-colors text-left truncate cursor-pointer hover:underline"
                       >
                         {student.name}
                       </button>
-                      <span className="text-[11px] font-mono text-slate-500 font-medium">
+                      <span className="text-[11px] font-mono text-slate-500 dark:text-slate-400 font-medium">
                         {student.registrationNumber}
                       </span>
-                      <span className="text-[10px] px-1.5 py-0.2 rounded bg-slate-100 text-slate-600 border border-slate-200">
+                      <span className="text-[10px] px-1.5 py-0.2 rounded-md bg-[#CFEBFF]/60 dark:bg-[#CFEBFF]/20 text-sky-900 dark:text-[#CFEBFF] border border-[#BAE2FE] dark:border-[#CFEBFF]/30 font-medium">
                         {student.branch} • Y{student.year}
                       </span>
                       <StatusBadge status={entry.status} size="sm" />
@@ -160,9 +162,9 @@ export const QueueView: React.FC<QueueViewProps> = ({
                         return (
                           <span
                             key={idx}
-                            className="text-[10px] px-2 py-0.5 rounded-md font-semibold bg-slate-100 text-slate-700 border border-slate-200"
+                            className="text-[10px] px-2 py-0.5 rounded-md font-semibold bg-[#FFFCE1] dark:bg-[#FFFCE1]/15 text-amber-950 dark:text-[#FFDDB0] border border-[#FFDDB0] dark:border-slate-700"
                           >
-                            <span className="text-slate-400 font-bold mr-1">#{pref.priority}</span>
+                            <span className="text-amber-700 dark:text-[#FFBE91] font-bold mr-1">#{pref.priority}</span>
                             {domainName}
                           </span>
                         );
@@ -170,12 +172,12 @@ export const QueueView: React.FC<QueueViewProps> = ({
                     </div>
 
                     {/* Meta info */}
-                    <div className="flex items-center gap-2 text-[10px] text-slate-400">
+                    <div className="flex items-center gap-2 text-[10px] text-slate-400 dark:text-slate-400">
                       <span className="flex items-center gap-1">
                         <Clock className="w-3 h-3" /> {formatTime(entry.joinedAt)}
                       </span>
                       {entry.assignedPanelId && (
-                        <span className="text-blue-600 font-semibold">
+                        <span className="text-sky-800 dark:text-[#CFEBFF] font-semibold">
                           → Assigned to Panel {entry.assignedPanelId.panelCode}
                         </span>
                       )}
@@ -190,12 +192,12 @@ export const QueueView: React.FC<QueueViewProps> = ({
                       {bestPanelMatch && (
                         <Button
                           size="sm"
-                          variant="success"
+                          variant="ice"
                           onClick={() => onQuickAssign(entry, bestPanelMatch!.panel._id)}
-                          className="text-[11px] gap-1 h-7.5 bg-emerald-600 hover:bg-emerald-700 font-bold"
+                          className="text-[11px] gap-1 h-7.5 font-bold"
                           title={`Assign to ${bestPanelMatch.panel.panelCode} (${bestPanelMatch.match.label})`}
                         >
-                          <Sparkles className="w-3 h-3 fill-emerald-200" />
+                          <Sparkles className="w-3 h-3 text-sky-700" />
                           <span>Assign {bestPanelMatch.panel.panelCode}</span>
                         </Button>
                       )}
@@ -217,7 +219,7 @@ export const QueueView: React.FC<QueueViewProps> = ({
                       size="sm"
                       variant="outline"
                       onClick={() => onSelectStudent(entry)}
-                      className="text-[11px] h-7.5 text-blue-600 border-blue-200 hover:bg-blue-50 font-semibold"
+                      className="text-[11px] h-7.5 text-sky-900 dark:text-[#CFEBFF] border-[#BAE2FE] dark:border-sky-800 bg-[#CFEBFF]/30 dark:bg-sky-950/40 hover:bg-[#CFEBFF] dark:hover:bg-sky-900/60 font-semibold"
                     >
                       Reassign
                     </Button>
@@ -227,7 +229,7 @@ export const QueueView: React.FC<QueueViewProps> = ({
                     <button
                       onClick={() => onRemoveStudent(entry)}
                       title="Remove from queue"
-                      className="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors cursor-pointer"
+                      className="p-1.5 text-slate-400 hover:text-rose-600 dark:hover:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/40 rounded-lg transition-colors cursor-pointer"
                     >
                       <UserX className="w-3.5 h-3.5" />
                     </button>

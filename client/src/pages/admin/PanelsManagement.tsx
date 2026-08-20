@@ -47,17 +47,17 @@ export const PanelsManagement: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col">
+    <div className="min-h-screen bg-[#FFFCE1] dark:bg-[#0B0F19] flex flex-col transition-colors duration-150 font-sans">
       <Navbar />
 
       <main className="flex-1 max-w-[1720px] w-full mx-auto px-4 sm:px-6 lg:px-8 py-5 space-y-5">
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
-            <h1 className="text-2xl font-bold text-slate-900 tracking-tight">
+            <h1 className="text-2xl font-bold text-slate-900 dark:text-white tracking-tight">
               Panels & Interviewers Management
             </h1>
-            <p className="text-xs text-slate-500 mt-0.5">
+            <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
               Configure interview panels, interviewer team assignments, and domain specializations.
             </p>
           </div>
@@ -81,19 +81,19 @@ export const PanelsManagement: React.FC = () => {
             return (
               <div
                 key={panel._id}
-                className="bg-white rounded-2xl border border-slate-200 shadow-2xs p-5 space-y-4 flex flex-col justify-between"
+                className="bg-white/95 dark:bg-[#0F1626] rounded-2xl border border-[#FFDDB0] dark:border-slate-800 shadow-2xs p-5 space-y-4 flex flex-col justify-between transition-colors"
               >
                 <div className="space-y-3">
                   <div className="flex items-start justify-between">
                     <div className="flex items-center gap-2.5">
-                      <div className="w-10 h-10 rounded-xl bg-slate-900 text-white font-mono font-bold flex items-center justify-center text-base">
+                      <div className="w-10 h-10 rounded-xl bg-[#FFBE91] text-amber-950 font-mono font-black flex items-center justify-center text-base shadow-xs border border-[#EA9661]/40">
                         {panel.panelCode}
                       </div>
                       <div>
-                        <h3 className="text-sm font-bold text-slate-900">{panel.name}</h3>
+                        <h3 className="text-sm font-bold text-slate-900 dark:text-white">{panel.name}</h3>
                         {panel.roomLocation && (
-                          <p className="text-[11px] text-slate-500 flex items-center gap-1">
-                            <Building2 className="w-3 h-3 text-slate-400" /> {panel.roomLocation}
+                          <p className="text-[11px] text-slate-500 dark:text-slate-400 flex items-center gap-1">
+                            <Building2 className="w-3 h-3 text-slate-400 dark:text-slate-500" /> {panel.roomLocation}
                           </p>
                         )}
                       </div>
@@ -102,14 +102,14 @@ export const PanelsManagement: React.FC = () => {
                   </div>
 
                   {/* Interviewers */}
-                  <div className="space-y-2 pt-2 border-t border-slate-100">
+                  <div className="space-y-2 pt-2 border-t border-slate-100 dark:border-slate-800">
                     <div className="flex items-center justify-between">
                       <p className="text-[11px] font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1">
                         <Users className="w-3 h-3" /> Interviewers ({interviewers.length})
                       </p>
                       <button
                         onClick={() => setSelectedPanelToEdit(panel)}
-                        className="text-[10px] font-semibold text-blue-600 hover:text-blue-700 cursor-pointer"
+                        className="text-[10px] font-semibold text-amber-900 dark:text-[#FFBE91] hover:underline cursor-pointer"
                       >
                         + Add / Edit
                       </button>
@@ -117,19 +117,19 @@ export const PanelsManagement: React.FC = () => {
 
                     <div className="space-y-1.5">
                       {interviewers.length === 0 ? (
-                        <p className="text-xs text-slate-400 italic">No interviewers assigned</p>
+                        <p className="text-xs text-slate-400 dark:text-slate-500 italic">No interviewers assigned</p>
                       ) : (
                         interviewers.map((int: any) => (
                           <div
                             key={int._id}
-                            className="p-2 bg-slate-50 rounded-lg border border-slate-200/80 text-xs flex items-center justify-between"
+                            className="p-2 bg-slate-50 dark:bg-slate-900/60 rounded-lg border border-slate-200/80 dark:border-slate-700 text-xs flex items-center justify-between"
                           >
-                            <span className="font-semibold text-slate-800">{int.name}</span>
+                            <span className="font-semibold text-slate-800 dark:text-slate-200">{int.name}</span>
                             <div className="flex items-center gap-1 flex-wrap justify-end">
                               {int.domains?.map((d: any) => (
                                 <span
                                   key={d._id || d}
-                                  className="text-[10px] px-1.5 py-0.2 rounded bg-white text-slate-600 font-mono border"
+                                  className="text-[10px] px-1.5 py-0.2 rounded bg-[#FFFCE1] dark:bg-[#FFFCE1]/15 text-amber-950 dark:text-[#FFDDB0] font-mono border border-[#FFDDB0]/60 dark:border-slate-700"
                                 >
                                   {d.name || d}
                                 </span>
@@ -142,7 +142,7 @@ export const PanelsManagement: React.FC = () => {
                   </div>
                 </div>
 
-                <div className="pt-3 border-t border-slate-100 flex items-center justify-between">
+                <div className="pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between">
                   <span className="text-[11px] font-mono text-slate-400">
                     ID: {panel._id.slice(-6)}
                   </span>
@@ -151,9 +151,9 @@ export const PanelsManagement: React.FC = () => {
                     size="sm"
                     variant="outline"
                     onClick={() => setSelectedPanelToEdit(panel)}
-                    className="text-xs h-7.5 gap-1.5 font-semibold border-slate-200"
+                    className="text-xs h-7.5 gap-1.5 font-semibold border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 bg-white dark:bg-[#111726] hover:bg-slate-50 dark:hover:bg-slate-800"
                   >
-                    <Settings2 className="w-3.5 h-3.5 text-slate-600" />
+                    <Settings2 className="w-3.5 h-3.5 text-slate-600 dark:text-slate-400" />
                     <span>Edit Panel & Team</span>
                   </Button>
                 </div>

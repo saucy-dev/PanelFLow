@@ -3,13 +3,13 @@ import { IQueueEntry } from '../models/QueueEntry.js';
 import { IStudent } from '../models/Student.js';
 export interface JoinQueueInput {
     sessionId?: string;
-    registrationNumber: string;
-    name: string;
-    email: string;
-    branch: string;
-    year: number | string;
+    registrationNumber?: string;
+    email?: string;
+    name?: string;
+    branch?: string;
+    year?: number | string;
     phone?: string;
-    domainPreferences: Array<{
+    domainPreferences?: Array<{
         domainId: string;
         priority: number;
     }>;
@@ -62,7 +62,7 @@ export declare class QueueService {
         __v: number;
     })[]>;
     /**
-     * Get Student Queue Status by Registration Number or Queue ID
+     * Get Student Queue Status by Registration Number, Email, or Queue ID
      */
     static getStudentQueueStatus(identifier: string): Promise<{
         queueEntry: mongoose.FlattenMaps<IQueueEntry> & Required<{

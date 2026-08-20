@@ -17,8 +17,15 @@ export interface AdminDashboardData {
   recentEvents: IEventLog[];
 }
 
+export interface DisplayData {
+  session: IInterviewSession;
+  queue: IQueueEntry[];
+  panels: IPanel[];
+}
+
 export const adminService = {
   getDashboard: () => api.get<AdminDashboardData>('/admin/dashboard'),
+  getDisplayData: () => api.get<DisplayData>('/sessions/display'),
   getAnalytics: (sessionId?: string) => {
     const params = sessionId ? `?sessionId=${sessionId}` : '';
     return api.get<ISessionAnalytics>(`/admin/analytics${params}`);

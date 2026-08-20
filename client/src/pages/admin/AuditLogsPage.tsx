@@ -4,7 +4,7 @@ import { adminService } from '../../services/admin.service.js';
 import { Navbar } from '../../components/common/Navbar.js';
 import { AuditLogStream } from '../../components/admin/AuditLogStream.js';
 import { LoadingSpinner } from '../../components/common/LoadingSpinner.js';
-import { Search, Filter, RefreshCw } from 'lucide-react';
+import { Search, RefreshCw } from 'lucide-react';
 import { Button } from '../../components/ui/Button.js';
 
 export const AuditLogsPage: React.FC = () => {
@@ -30,25 +30,30 @@ export const AuditLogsPage: React.FC = () => {
   });
 
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col">
+    <div className="min-h-screen bg-[#FFFCE1] dark:bg-[#0B0F19] flex flex-col transition-colors duration-150 font-sans">
       <Navbar />
 
       <main className="flex-1 max-w-[1720px] w-full mx-auto px-4 sm:px-6 lg:px-8 py-5 space-y-4">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
-            <h1 className="text-2xl font-bold text-slate-900 tracking-tight">Audit Trail & Event Log</h1>
-            <p className="text-xs text-slate-500 mt-0.5">
+            <h1 className="text-2xl font-bold text-slate-900 dark:text-white tracking-tight">Audit Trail & Event Log</h1>
+            <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
               Immutable chronological record of all queue registrations, assignments, panel status shifts, and interview events.
             </p>
           </div>
 
-          <Button size="sm" variant="outline" onClick={() => refetch()} className="gap-1.5 self-start">
+          <Button
+            size="sm"
+            variant="outline"
+            onClick={() => refetch()}
+            className="gap-1.5 self-start border-[#FFDDB0] dark:border-slate-700 bg-white dark:bg-[#0F1626] text-slate-800 dark:text-slate-200"
+          >
             <RefreshCw className="w-3.5 h-3.5" /> Refresh Logs
           </Button>
         </div>
 
         {/* Filters */}
-        <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-2xs flex flex-col sm:flex-row gap-3 items-center justify-between">
+        <div className="bg-white/95 dark:bg-[#0F1626] p-4 rounded-2xl border border-[#FFDDB0] dark:border-slate-800 shadow-2xs flex flex-col sm:flex-row gap-3 items-center justify-between transition-colors">
           <div className="relative w-full sm:w-80">
             <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
             <input
@@ -56,16 +61,16 @@ export const AuditLogsPage: React.FC = () => {
               placeholder="Search by candidate, panel, or actor..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full h-9 pl-9 pr-3 text-xs bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-blue-500 focus:bg-white"
+              className="w-full h-9 pl-9 pr-3 text-xs bg-slate-50 dark:bg-[#111726] border border-[#FFDDB0] dark:border-slate-700 text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 rounded-xl focus:outline-none focus:border-[#FFBE91]"
             />
           </div>
 
           <div className="flex items-center gap-2 w-full sm:w-auto">
-            <span className="text-xs font-semibold text-slate-500">Filter Event:</span>
+            <span className="text-xs font-semibold text-slate-500 dark:text-slate-400">Filter Event:</span>
             <select
               value={eventTypeFilter}
               onChange={(e) => setEventTypeFilter(e.target.value)}
-              className="h-9 px-3 text-xs bg-slate-50 border border-slate-200 rounded-lg font-medium text-slate-800 focus:outline-none focus:border-blue-500"
+              className="h-9 px-3 text-xs bg-slate-50 dark:bg-[#111726] border border-[#FFDDB0] dark:border-slate-700 font-medium text-slate-800 dark:text-slate-200 rounded-xl focus:outline-none focus:border-[#FFBE91]"
             >
               <option value="ALL">All Events</option>
               <option value="STUDENT_JOINED_QUEUE">Queue Registrations</option>

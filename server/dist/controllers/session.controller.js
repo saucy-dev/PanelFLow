@@ -2,6 +2,8 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.SessionController = void 0;
 const session_service_js_1 = require("../services/session.service.js");
+const queue_service_js_1 = require("../services/queue.service.js");
+const panel_service_js_1 = require("../services/panel.service.js");
 const InterviewSession_js_1 = require("../models/InterviewSession.js");
 const apiResponse_js_1 = require("../utils/apiResponse.js");
 class SessionController {
@@ -12,6 +14,23 @@ class SessionController {
         }
         catch (error) {
             return apiResponse_js_1.ApiResponse.error(res, error.message || 'Failed to fetch session', 500);
+        }
+    }
+    static async getDisplayData(req, res) {
+        try {
+            const session = await session_service_js_1.SessionService.getActiveSession();
+            const [queue, panels] = await Promise.all([
+                queue_service_js_1.QueueService.getQueue(session._id.toString()),
+                panel_service_js_1.PanelService.getAllPanels(),
+            ]);
+            return apiResponse_js_1.ApiResponse.success(res, {
+                session,
+                queue,
+                panels,
+            });
+        }
+        catch (error) {
+            return apiResponse_js_1.ApiResponse.error(res, error.message || 'Failed to fetch display data', 500);
         }
     }
     static async updateSession(req, res) {

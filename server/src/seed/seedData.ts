@@ -14,7 +14,6 @@ import { EventLog } from '../models/EventLog.js';
 export async function seedDatabase() {
   console.log('🌱 Starting PanelFlow database seed...');
 
-  // Clear existing collections
   await Promise.all([
     User.deleteMany({}),
     Domain.deleteMany({}),

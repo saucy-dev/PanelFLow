@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { useAuthStore } from './store/authStore.js';
 import { useSocketStore } from './store/socketStore.js';
+import { useThemeStore } from './store/themeStore.js';
 import { getSocket } from './socket/socketClient.js';
 import { Toaster } from 'sonner';
 
@@ -19,6 +20,11 @@ import { WaitingRoomDisplay } from './pages/display/WaitingRoomDisplay.js';
 export function App() {
   const checkAuth = useAuthStore((state) => state.checkAuth);
   const setConnected = useSocketStore((state) => state.setConnected);
+
+  // Initialize theme on mount
+  useEffect(() => {
+    useThemeStore.getState().initTheme();
+  }, []);
 
   // Initialize authentication check once on mount
   useEffect(() => {
@@ -69,7 +75,7 @@ export function App() {
         <Route path="/interview/join" element={<JoinQueuePage />} />
         <Route path="/interview/queue/:id" element={<QueueStatusPage />} />
 
-        {/* Public Waiting Room TV Display */}
+        {/* Public Waiting Room TV Display (Remains explicitly in dark mode) */}
         <Route path="/display" element={<WaitingRoomDisplay />} />
 
         {/* Fallback */}

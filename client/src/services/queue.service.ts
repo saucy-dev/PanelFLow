@@ -3,13 +3,13 @@ import { IQueueEntry, IStudent } from '../types/index.js';
 
 export interface JoinQueuePayload {
   sessionId?: string;
-  registrationNumber: string;
-  name: string;
-  email: string;
-  branch: string;
-  year: number | string;
+  registrationNumber?: string;
+  email?: string;
+  name?: string;
+  branch?: string;
+  year?: number | string;
   phone?: string;
-  domainPreferences: Array<{ domainId: string; priority: number }>;
+  domainPreferences?: Array<{ domainId: string; priority: number }>;
 }
 
 export interface JoinQueueResponse {
@@ -36,6 +36,6 @@ export const queueService = {
   removeFromQueue: (queueEntryId: string, reason?: string) =>
     api.post<IQueueEntry>(`/queue/${queueEntryId}/remove`, { reason }),
   restoreToQueue: (queueEntryId: string) => api.post<IQueueEntry>(`/queue/${queueEntryId}/restore`),
-  lookupStudent: (registrationNumber: string) =>
-    api.get<IStudent>(`/students/lookup/${registrationNumber}`),
+  lookupStudent: (query: string) =>
+    api.get<IStudent>(`/students/lookup?q=${encodeURIComponent(query.trim())}`),
 };

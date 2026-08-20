@@ -112,7 +112,7 @@ export const AdminDashboard: React.FC = () => {
   const nextWaitingCandidate = queue.find((q) => q.status === 'WAITING') || null;
 
   return (
-    <div className="h-screen w-screen flex flex-col overflow-hidden bg-slate-100/70 select-none">
+    <div className="h-screen w-screen flex flex-col overflow-hidden bg-slate-100/70 dark:bg-[#0B0F19] select-none transition-colors duration-150">
       {/* Top Fixed Navbar */}
       <Navbar />
 

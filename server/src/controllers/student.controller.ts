@@ -3,18 +3,32 @@ import { Student } from '../models/Student.js';
 import { ApiResponse } from '../utils/apiResponse.js';
 
 export class StudentController {
-  static async lookupByRegistration(req: Request, res: Response) {
-    const regNo = (req.params.registrationNumber as string).trim().toUpperCase();
+  static async lookup(req: Request, res: Response) {
+    const rawQuery = (req.query.q as string) || (req.params.query as string) || (req.params.registrationNumber as string) || '';
+    const clean = rawQuery.trim();
 
-    const student = await Student.findOne({ registrationNumber: regNo })
+    if (!clean) {
+      return ApiResponse.error(res, 'Registration number or email query is required', 400);
+    }
+
+    const student = await Student.findOne({
+      $or: [
+        { registrationNumber: clean.toUpperCase() },
+        { email: clean.toLowerCase() },
+      ],
+    })
       .populate('domainPreferences.domainId')
       .lean();
 
     if (!student) {
-      return ApiResponse.error(res, 'Student record not found', 404);
+      return ApiResponse.error(res, 'Student record not found in synced database', 404);
     }
 
-    return ApiResponse.success(res, student, 'Student found');
+    return ApiResponse.success(res, student, 'Student record found');
+  }
+
+  static async lookupByRegistration(req: Request, res: Response) {
+    return StudentController.lookup(req, res);
   }
 
   static async getStudentById(req: Request, res: Response) {

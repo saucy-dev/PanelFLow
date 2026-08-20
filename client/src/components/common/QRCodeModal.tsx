@@ -109,42 +109,34 @@ export const QRCodeModal: React.FC<QRCodeModalProps> = ({ isOpen, onClose, sessi
         {/* QR Code Container */}
         <div
           ref={qrRef}
-          className="p-5 bg-white rounded-2xl border-2 border-slate-100 shadow-md flex items-center justify-center"
+          className="p-5 bg-white rounded-2xl border-2 border-[#FFDDB0] shadow-md flex items-center justify-center"
         >
           <QRCodeSVG
             value={joinUrl}
             size={220}
             level="H"
             includeMargin={true}
-            imageSettings={{
-              src: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%232563eb"><circle cx="12" cy="12" r="10"/></svg>',
-              x: undefined,
-              y: undefined,
-              height: 24,
-              width: 24,
-              excavate: true,
-            }}
           />
         </div>
 
         {/* URL Pill */}
-        <div className="w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 flex items-center justify-between text-left">
-          <span className="text-xs font-mono text-slate-700 truncate select-all">{joinUrl}</span>
+        <div className="w-full bg-slate-50 dark:bg-[#111726] border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 flex items-center justify-between text-left">
+          <span className="text-xs font-mono text-slate-700 dark:text-slate-200 truncate select-all">{joinUrl}</span>
           <Button
             size="sm"
             variant="ghost"
             onClick={handleCopy}
-            className="h-7 text-xs px-2 shrink-0 ml-2"
+            className="h-7 text-xs px-2 shrink-0 ml-2 dark:text-slate-300 dark:hover:text-white"
           >
-            {copied ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5" />}
+            {copied ? <Check className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
             <span className="ml-1">{copied ? 'Copied' : 'Copy'}</span>
           </Button>
         </div>
 
         {/* Action Buttons */}
         <div className="grid grid-cols-2 gap-3 w-full pt-1">
-          <Button variant="outline" size="sm" onClick={handleDownload} className="w-full gap-2">
-            <Download className="w-4 h-4 text-slate-600" />
+          <Button variant="outline" size="sm" onClick={handleDownload} className="w-full gap-2 border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 bg-white dark:bg-[#111726] hover:bg-slate-50 dark:hover:bg-slate-800">
+            <Download className="w-4 h-4 text-slate-600 dark:text-slate-300" />
             Download PNG
           </Button>
           <Button variant="primary" size="sm" onClick={handlePrint} className="w-full gap-2">
@@ -157,7 +149,7 @@ export const QRCodeModal: React.FC<QRCodeModalProps> = ({ isOpen, onClose, sessi
           href="/interview/join"
           target="_blank"
           rel="noopener noreferrer"
-          className="text-xs text-blue-600 hover:text-blue-700 font-medium inline-flex items-center gap-1 hover:underline"
+          className="text-xs text-amber-900 dark:text-[#FFBE91] hover:underline font-semibold inline-flex items-center gap-1"
         >
           Open Candidate View in New Tab <ExternalLink className="w-3 h-3" />
         </a>

@@ -1,5 +1,7 @@
 import { Request, Response } from 'express';
 import { SessionService } from '../services/session.service.js';
+import { QueueService } from '../services/queue.service.js';
+import { PanelService } from '../services/panel.service.js';
 import { InterviewSession } from '../models/InterviewSession.js';
 import { ApiResponse } from '../utils/apiResponse.js';
 
@@ -10,6 +12,24 @@ export class SessionController {
       return ApiResponse.success(res, session);
     } catch (error: any) {
       return ApiResponse.error(res, error.message || 'Failed to fetch session', 500);
+    }
+  }
+
+  static async getDisplayData(req: Request, res: Response) {
+    try {
+      const session = await SessionService.getActiveSession();
+      const [queue, panels] = await Promise.all([
+        QueueService.getQueue(session._id.toString()),
+        PanelService.getAllPanels(),
+      ]);
+
+      return ApiResponse.success(res, {
+        session,
+        queue,
+        panels,
+      });
+    } catch (error: any) {
+      return ApiResponse.error(res, error.message || 'Failed to fetch display data', 500);
     }
   }
 

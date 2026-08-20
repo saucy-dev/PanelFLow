@@ -1,17 +1,17 @@
 # PanelFlow — Real-Time Club Interview Management System
 
-A production-grade, real-time web application engineered for high-traffic university club recruitments, hackathon team screenings, and multi-panel interview sessions. PanelFlow replaces manual paper-based queues with an authoritative real-time control center, immutable sequential queue ordering, human-in-the-loop domain matching, atomic race-condition concurrency protection, Google Sheets integration, and live WebSocket multi-screen synchronization.
+A production-grade, real-time web application engineered for high-traffic university club recruitments, hackathon team screenings, and multi-panel interview sessions. PanelFlow replaces manual paper-based queues with an authoritative real-time control center, immutable sequential queue ordering, human-in-the-loop domain matching, atomic race-condition concurrency protection, Google Sheets integration, interactive split-screen projector displays, and live WebSocket multi-screen synchronization.
 
 ---
 
 ## 1. Core Product Philosophy
 
-> **This is NOT an automatic matchmaking system. The administrator is the final decision-maker.**
+> **This is NOT an automated matchmaking black-box. The human administrator is the final decision-maker.**
 
-1. **Live Arrival Queue**: Students enter the queue in sequential order and receive an **immutable queue number** (e.g. `#1`, `#2`, `#3`) that never changes or gets renumbered.
-2. **Human-in-the-Loop Matching**: Queue position defines arrival order, but the coordinator has full discretion to skip or triage candidates based on live panel domain availability (e.g. assigning `#3 Priya (ML)` to an available `P1 (ML)` panel while `#1 Ayush (AR/VR)` waits for `P2 (AR/VR)` to become free).
-3. **Informational Match Scoring**: Deterministic matching indicators (`STRONG MATCH`, `GOOD MATCH`, `NO MATCH`) highlight compatibility with panel interviewers without forcing automated assignments.
-4. **Authoritative Concurrency Protection**: Multi-admin race conditions are prevented at the database level using atomic conditional operations (`findOneAndUpdate` with `status: 'AVAILABLE'`). If two coordinators try to assign different students to the same panel simultaneously, exactly one succeeds and the other receives a descriptive `409 Conflict`.
+1. **Immutable Live Arrival Queue**: Students enter the queue sequentially and receive a permanent **immutable ticket number** (e.g. `#1`, `#2`, `#3`) that never shifts or gets renumbered.
+2. **Human-in-the-Loop Matching**: Arrival position establishes queue priority, while coordinators maintain complete discretion to triage or assign candidates based on live panel domain availability (e.g., assigning `#3 Priya (ML)` to an available `P1 (ML)` panel while `#1 Ayush (AR/VR)` waits for `P2 (AR/VR)` to finish).
+3. **Deterministic Match Scoring**: High-visibility compatibility indicators (`STRONG MATCH`, `GOOD MATCH`, `NO MATCH`) compute overlap between candidate preferences and active panel interviewers without overriding human control.
+4. **Authoritative Concurrency Protection**: Race conditions between multiple concurrent coordinators are prevented at the database level using atomic conditional operations (`findOneAndUpdate` with `status: 'AVAILABLE'`). If two admins attempt to assign different candidates to the same panel simultaneously, exactly one succeeds and the other receives a descriptive `409 Conflict`.
 
 ---
 
@@ -22,8 +22,8 @@ graph TD
     subgraph Clients
         Admin[Admin Control Center<br/>Desktop-First]
         Panel[Panel Workstation<br/>Interviewer View]
-        Student[Candidate Mobile Queue<br/>Mobile-First QR]
-        Display[Public Waiting Room Display<br/>TV / Projector View]
+        Student[Candidate Mobile Queue<br/>Mobile-First QR Check-In]
+        Display[Waiting Room TV Display<br/>Dual-Resizer Projector View]
     end
 
     subgraph Backend [Node.js + Express + Socket.IO Server]
@@ -33,7 +33,7 @@ graph TD
         MatchEngine[Deterministic Domain Matching Engine]
         SheetService[Google Sheets & CSV Importer]
         AnalyticsService[Session Analytics & Metrics]
-        EventLogger[Audit & Event Logger]
+        EventLogger[Audit Trail & Event Logger]
         SocketServer[Socket.IO Server<br/>Rooms: admin, panel:id, student:id, session:id]
     end
 
@@ -48,36 +48,66 @@ graph TD
         MEvents[(Event Logs)]
     end
 
-    Admin -->|REST API + Sockets| Backend
-    Panel -->|REST API + Sockets| Backend
-    Student -->|REST API + Sockets| Backend
-    Display -->|Sockets Live Sync| Backend
+    Admin -->|REST API + WebSockets| Backend
+    Panel -->|REST API + WebSockets| Backend
+    Student -->|REST API + WebSockets| Backend
+    Display -->|WebSockets Live Sync| Backend
 
     Backend --> Database
 ```
 
 ---
 
-## 3. Tech Stack
+## 3. Key Surfaces & Capabilities
 
-- **Frontend**: React 18, Vite, TypeScript, Tailwind CSS, Lucide Icons, TanStack Query, Zustand, Socket.IO Client, React Hook Form, Zod, Sonner, QRCode.react, Canvas-Confetti.
-- **Backend**: Node.js, Express, TypeScript, Socket.IO, Mongoose, Zod, JWT, bcryptjs, CSV-Parse, Google APIs (Google Sheets API v4), Helmet, CORS, Express-Rate-Limit.
-- **Database**: MongoDB / MongoDB Atlas (with automatic in-memory MongoDB fallback for instant zero-setup local dev and automated testing).
-
----
-
-## 4. Key User Roles & Interfaces
-
-| Role / Surface | Route | Capabilities |
+| Surface | Route | Key Features |
 |---|---|---|
-| **Admin Control Center** | `/admin` | Live 2-pane split view (Waiting Queue & Panels Grid), Call Next candidate modal, 1-click domain match assignment, reassignment, cancellation, session control, Google Sheets import, QR code generation. |
-| **Panel Workstation** | `/panel/:panelCode` | Panel status control (`AVAILABLE`, `OCCUPIED`, `PAUSED`, `OFFLINE`), live assigned candidate card with ordered domain preferences, running interview stopwatch timer, 1-click `[INTERVIEW COMPLETE]` action. |
-| **Candidate Mobile QR** | `/interview/join`<br>`/interview/queue/:id` | Mobile-first QR entry, instant pre-imported registration number lookup, domain preference ranking, real-time ticket with live count ahead, pulsating assignment banner with panel room & interviewer info. |
-| **Public Waiting TV Display** | `/display` | Split-screen kiosk for hall projectors showing **NOW CALLING** active interviews and **UP NEXT** waiting queue in real time. |
+| **Admin Control Center** | `/admin` | 2-pane live dashboard (Waiting Queue & Panel Grid), Call Next candidate modal, 1-click domain match assignment, reassignments, cancellations, session pause/resume, Google Sheets import, QR sheet export. |
+| **Panels & Teams Management** | `/admin/panels` | Full panel CRUD, live interviewer team assignments, domain tagging, delete confirmation prompts, and room location management. |
+| **Panel Workstation** | `/panel/:panelCode` | Active candidate card with ranked domain preferences, live elapsed stopwatch, status toggles (`AVAILABLE`, `OCCUPIED`, `PAUSED`, `OFFLINE`), dynamic empty states, and confetti-triggered `[INTERVIEW COMPLETE]` action. |
+| **Waiting Room TV Display** | `/display` | Projector/TV split-screen kiosk with **0ms latency interactive dual resizers** (horizontal column split + vertical QR-to-queue split), auto-scaling dynamic QR code, glowing live interview grid, and persistent layout settings. |
+| **Candidate Check-In** | `/interview/join` | Simplified check-in form with real-time roster debounced lookup by **Registration Number** or **Email**, auto-inheriting domain preferences. |
+| **Candidate Live Status** | `/interview/queue/:regNo` | Mobile-first live queue ticket showing exact count ahead, estimated wait time, and pulsating assignment alert with room directions when called. |
+| **Session Analytics** | `/admin/analytics` | Real-time session throughput, average wait times, longest wait, interview durations, candidate funnel, and panel utilization rate. |
+| **Audit Trail & Event Log** | `/admin/audit` | Chronological event stream recording registrations, assignments, panel status shifts, interviewer modifications, and Google Sheets imports. |
 
 ---
 
-## 5. Folder Structure
+## 4. Theme System & Color Palette
+
+PanelFlow features a system-wide **Light / Dark Mode Switcher** with persistent theme preferences, adhering to a refined color palette:
+
+- **Warm Peach (`#FFBE91`)**: Primary brand badges, logo icon, primary buttons, panel codes, and active status accents.
+- **Soft Apricot (`#FFDDB0`)**: Card borders, subheaders, highlights, and secondary chips.
+- **Warm Cream (`#FFFCE1`)**: Light-mode canvas background and subtle badge backdrops.
+- **Sky Blue (`#CFEBFF`)**: Domain tags, branch pills, and live URL chips.
+- **Cinema Dark (`#0B0F19` & `#0F1626`)**: Dark canvas, deep navy card surfaces, and high-contrast projector display.
+
+---
+
+## 5. Tech Stack
+
+### Frontend
+- **Framework**: React 18 with Vite & TypeScript
+- **Styling**: Tailwind CSS with custom theme variables
+- **State Management**: Zustand (Auth & Theme stores)
+- **Data Fetching**: TanStack Query (React Query)
+- **Real-Time Communication**: Socket.IO Client
+- **Icons**: Lucide React
+- **Notifications**: Sonner
+- **Utility Libraries**: `canvas-confetti`, `qrcode.react`, `clsx`, `tailwind-merge`
+
+### Backend
+- **Runtime**: Node.js & Express (TypeScript)
+- **Real-Time WebSockets**: Socket.IO (room-based broadcasting)
+- **Database ODM**: Mongoose (MongoDB / MongoDB Atlas)
+- **Embedded Database**: `mongodb-memory-server` (automatic fallback for zero-configuration local dev and testing)
+- **Security & Validation**: Zod, JWT, bcryptjs, Helmet, CORS, Express-Rate-Limit
+- **Data Ingestion**: CSV-Parse & Google APIs (Google Sheets API v4)
+
+---
+
+## 6. Project Structure
 
 ```
 PanelFlow/
@@ -86,9 +116,9 @@ PanelFlow/
 │   │   ├── config/          # Environment variables & MongoDB Atlas connection
 │   │   ├── models/          # User, Student, Domain, Interviewer, Panel, QueueEntry, Assignment, Session, EventLog
 │   │   ├── services/        # Queue, Assignment, Interview, Panel, Sheets, Analytics, Event services
-│   │   ├── controllers/     # REST controllers
-│   │   ├── routes/          # Express API route modules
-│   │   ├── sockets/         # Socket.IO handlers and room management
+│   │   ├── controllers/     # REST API controllers
+│   │   ├── routes/          # Express route definitions
+│   │   ├── sockets/         # Socket.IO handlers and room broadcasters
 │   │   ├── utils/           # JWT, Domain Matcher algorithm, ApiResponse
 │   │   ├── validators/      # Zod request validation schemas
 │   │   ├── seed/            # Development database seed script
@@ -99,13 +129,14 @@ PanelFlow/
 │
 ├── client/
 │   ├── src/
-│   │   ├── components/      # UI primitives, Admin, Panel, Student, and Display components
+│   │   ├── components/      # Admin, Panel, Student, Display, Common, and UI components
 │   │   ├── pages/           # AdminDashboard, PanelsManagement, Analytics, AuditLogs, PanelDashboard, JoinQueue, QueueStatus, WaitingRoomDisplay, Login
-│   │   ├── services/        # API client and backend service wrappers
+│   │   ├── services/        # Axios API client and service wrappers
 │   │   ├── socket/          # Socket.IO client and room listeners
-│   │   ├── store/           # Zustand stores for Auth, Socket, and Session
-│   │   ├── utils/           # Formatters, class merging, domain match calculation
-│   │   ├── App.tsx          # React Router setup
+│   │   ├── store/           # Zustand stores for Auth and Theme
+│   │   ├── types/           # Shared TypeScript interfaces & types
+│   │   ├── utils/           # Formatters, domain matching logic, class merging
+│   │   ├── App.tsx          # React Router & Theme initialization
 │   │   └── main.tsx         # Client entry point
 │   └── package.json
 │
@@ -116,14 +147,14 @@ PanelFlow/
 
 ---
 
-## 6. Getting Started Locally
+## 7. Getting Started Locally
 
 ### Prerequisites
-- Node.js (v18+)
-- npm (v9+)
+- **Node.js**: v18.0.0 or higher
+- **npm**: v9.0.0 or higher
 
-### Installation
-Clone the repository and install all dependencies:
+### 1. Installation
+Clone the repository and install all root and workspace dependencies:
 ```bash
 git clone https://github.com/your-org/PanelFlow.git
 cd PanelFlow
@@ -132,31 +163,35 @@ npm install --prefix server
 npm install --prefix client
 ```
 
-### Environment Variables
+### 2. Environment Configuration
 Copy `.env.example` to `.env`:
 ```bash
 cp .env.example .env
 ```
-*(Optional: Provide a `MONGODB_URI` from MongoDB Atlas. If omitted, PanelFlow automatically starts an in-memory MongoDB instance for instant zero-configuration development!)*
 
-### Running the Application
-Start both server and client concurrently:
+*(Note: If `MONGODB_URI` is left blank, PanelFlow will automatically spin up an in-memory MongoDB instance for instant zero-setup local development!)*
+
+### 3. Running Development Servers
+Start both the backend server and Vite frontend client concurrently:
 ```bash
 npm run dev
 ```
+
 - **Frontend App**: `http://localhost:5173`
-- **Backend API & Sockets**: `http://localhost:5000`
+- **Backend API & WebSockets**: `http://localhost:5000`
+- **Waiting Room TV Display**: `http://localhost:5173/display`
+- **Candidate Check-In**: `http://localhost:5173/interview/join`
 
 ---
 
-## 7. Default Credentials & Demo Accounts
+## 8. Demo Credentials & Seed Data
 
-When started for the first time, PanelFlow automatically seeds the database with panels, interviewers, domains, and waiting candidates:
+When booted for the first time, PanelFlow seeds default demo accounts and panels:
 
 - **Admin Coordinator**:
   - Email: `admin@panelflow.com`
   - Password: `adminpassword123`
-- **Panel Codes**:
+- **Default Panels**:
   - `P1`: Panel 1 — Advanced Tech (Rahul: AR/VR, Ankit: IoT, Priya: ML)
   - `P2`: Panel 2 — Software & Security (Karan: Web, Aman: Android, Riya: Cybersecurity)
   - `P3`: Panel 3 — Engineering & Design (Dev: Backend, Neha: Frontend, Arjun: Game Dev)
@@ -164,49 +199,57 @@ When started for the first time, PanelFlow automatically seeds the database with
 
 ---
 
-## 8. Running Automated Tests
+## 9. Google Sheets & CSV Bulk Import
 
-Run the test suite verifying sequential ordering, duplicate protection, atomic concurrency locking (409 Conflict), interview lifecycle completion, and RBAC authorization:
+PanelFlow supports importing pre-registered candidates, interviewers, and panels via CSV data or Google Sheets:
+
+1. Open the Admin Control Center at `/admin` and click **"Import Sheets"**.
+2. Choose your target import dataset:
+   - **Students & Preferences**: `Registration Number, Name, Email, Branch, Year, Preference 1, Preference 2, Preference 3`
+   - **Interviewers & Domains**: `Panel, Name, Email, Domain 1, Domain 2`
+   - **Panels**: `Panel Code, Name, Room Location`
+3. Click **"Validate CSV"** to inspect a pre-commit verification table highlighting valid records and errors.
+4. Click **"Commit Import"** to ingest records into MongoDB.
+
+---
+
+## 10. Automated Testing
+
+PanelFlow includes an integration test suite covering sequential ticket ordering, duplicate prevention, atomic 409 concurrency conflict locking, interview lifecycle state shifts, and role-based access control:
+
 ```bash
 npm test
 ```
 
 ---
 
-## 9. Google Sheets & CSV Bulk Import
+## 11. Production Deployment
 
-PanelFlow supports importing Candidates, Interviewers, and Panels directly from CSV or Google Sheets:
-1. Open the Admin Control Center at `/admin` and click **"Import Sheets"**.
-2. Select your import type:
-   - **Students & Preferences**: `Registration Number, Name, Email, Branch, Year, Preference 1, Preference 2, Preference 3`
-   - **Interviewers & Domains**: `Panel, Name, Email, Domain 1, Domain 2`
-   - **Panels**: `Panel Code, Name, Room Location`
-3. Click **"Validate CSV"** to inspect a pre-commit verification preview showing valid rows and errors.
-4. Click **"Commit Import"** to atomically ingest the records into MongoDB.
-
----
-
-## 10. Deployment Guide
-
-### Deploying Database (MongoDB Atlas)
+### Database (MongoDB Atlas)
 1. Create a free cluster on [MongoDB Atlas](https://www.mongodb.com/atlas).
-2. Create a database user and allow network access (`0.0.0.0/0` or your host IP).
-3. Copy your connection string: `mongodb+srv://<user>:<password>@cluster.mongodb.net/panelflow?retryWrites=true&w=majority`.
+2. Configure a database user and whitelist network access (`0.0.0.0/0`).
+3. Set `MONGODB_URI=mongodb+srv://<user>:<password>@cluster.mongodb.net/panelflow?retryWrites=true&w=majority`.
 
-### Deploying Backend (Render / Railway / Fly.io)
-1. Set the root directory to `server` or configure build commands:
-   - Build Command: `npm install && npm run build`
-   - Start Command: `npm start`
+### Backend (Render / Railway / Fly.io / AWS)
+1. Configure build and start commands:
+   - **Build Command**: `npm install && npm run build`
+   - **Start Command**: `npm start`
 2. Configure Environment Variables:
    - `NODE_ENV=production`
    - `PORT=5000`
    - `MONGODB_URI=<your-atlas-uri>`
-   - `JWT_SECRET=<your-strong-random-secret>`
-   - `CLIENT_URL=https://your-panelflow-frontend.vercel.app`
+   - `JWT_SECRET=<your-secret-key>`
+   - `CLIENT_URL=https://your-panelflow.vercel.app`
 
-### Deploying Frontend (Vercel)
-1. Connect your GitHub repository to [Vercel](https://vercel.com).
+### Frontend (Vercel / Netlify)
+1. Import repository on [Vercel](https://vercel.com).
 2. Set Root Directory to `client`.
 3. Set Framework Preset to **Vite**.
-4. Configure Build Command: `npm run build` and Output Directory: `dist`.
-5. Set `VITE_API_URL` to your backend URL.
+4. Configure Environment Variable:
+   - `VITE_API_URL=https://your-backend-api.onrender.com`
+
+---
+
+## 12. License
+
+Distributed under the MIT License. See `LICENSE` for details.

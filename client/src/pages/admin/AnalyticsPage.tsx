@@ -13,13 +13,13 @@ export const AnalyticsPage: React.FC = () => {
   });
 
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col">
+    <div className="min-h-screen bg-[#FFFCE1] dark:bg-[#0B0F19] flex flex-col transition-colors duration-150 font-sans">
       <Navbar />
 
       <main className="flex-1 max-w-[1720px] w-full mx-auto px-4 sm:px-6 lg:px-8 py-5 space-y-5">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900 tracking-tight">Session Analytics & Metrics</h1>
-          <p className="text-xs text-slate-500 mt-0.5">
+          <h1 className="text-2xl font-bold text-slate-900 dark:text-white tracking-tight">Session Analytics & Metrics</h1>
+          <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
             Real-time performance analytics, average candidate wait durations, and panel utilization.
           </p>
         </div>

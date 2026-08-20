@@ -1,8 +1,7 @@
 import React from 'react';
 import { ISessionAnalytics } from '../../types/index.js';
 import { Card, CardHeader, CardTitle, CardContent } from '../ui/Card.js';
-import { formatDuration } from '../../utils/formatters.js';
-import { Clock, Hourglass, CheckCircle2, Users, Activity, Sparkles, TrendingUp } from 'lucide-react';
+import { Clock, Hourglass, CheckCircle2, Activity } from 'lucide-react';
 
 export const AnalyticsView: React.FC<{ analytics: ISessionAnalytics | null }> = ({ analytics }) => {
   if (!analytics) return null;
@@ -15,32 +14,32 @@ export const AnalyticsView: React.FC<{ analytics: ISessionAnalytics | null }> = 
       value: `${metrics.averageWaitMinutes} min`,
       subtitle: `Longest wait: ${metrics.longestWaitMinutes} min`,
       icon: Hourglass,
-      color: 'text-amber-600',
-      bg: 'bg-amber-50',
+      color: 'text-amber-600 dark:text-amber-400',
+      bg: 'bg-amber-50 dark:bg-amber-950/50',
     },
     {
       title: 'Avg. Interview Duration',
       value: `${metrics.averageDurationMinutes} min`,
       subtitle: 'Target: 15 min / candidate',
       icon: Clock,
-      color: 'text-blue-600',
-      bg: 'bg-blue-50',
+      color: 'text-blue-600 dark:text-[#CFEBFF]',
+      bg: 'bg-blue-50 dark:bg-sky-950/50',
     },
     {
       title: 'Completed Interviews',
       value: queue.COMPLETED,
       subtitle: `${queue.TOTAL} total candidates registered`,
       icon: CheckCircle2,
-      color: 'text-emerald-600',
-      bg: 'bg-emerald-50',
+      color: 'text-emerald-600 dark:text-emerald-400',
+      bg: 'bg-emerald-50 dark:bg-emerald-950/50',
     },
     {
       title: 'Panel Utilization Rate',
       value: `${metrics.panelUtilizationPercentage}%`,
       subtitle: `${panels.OCCUPIED} of ${panels.AVAILABLE + panels.OCCUPIED + panels.PAUSED} active panels interviewing`,
       icon: Activity,
-      color: 'text-purple-600',
-      bg: 'bg-purple-50',
+      color: 'text-purple-600 dark:text-purple-400',
+      bg: 'bg-purple-50 dark:bg-purple-950/50',
     },
   ];
 
@@ -54,15 +53,15 @@ export const AnalyticsView: React.FC<{ analytics: ISessionAnalytics | null }> = 
             <Card key={idx}>
               <CardContent className="p-5 flex items-center justify-between">
                 <div className="space-y-1">
-                  <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider">
+                  <p className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
                     {stat.title}
                   </p>
-                  <p className="text-2xl font-extrabold text-slate-900 font-mono tracking-tight">
+                  <p className="text-2xl font-extrabold text-slate-900 dark:text-white font-mono tracking-tight">
                     {stat.value}
                   </p>
-                  <p className="text-[11px] text-slate-400 font-medium">{stat.subtitle}</p>
+                  <p className="text-[11px] text-slate-400 dark:text-slate-400 font-medium">{stat.subtitle}</p>
                 </div>
-                <div className={`w-12 h-12 rounded-2xl ${stat.bg} ${stat.color} flex items-center justify-center`}>
+                <div className={`w-12 h-12 rounded-2xl ${stat.bg} ${stat.color} flex items-center justify-center border border-slate-100 dark:border-slate-800`}>
                   <Icon className="w-6 h-6" />
                 </div>
               </CardContent>
@@ -90,12 +89,12 @@ export const AnalyticsView: React.FC<{ analytics: ISessionAnalytics | null }> = 
               return (
                 <div key={idx} className="space-y-1.5">
                   <div className="flex justify-between text-xs font-semibold">
-                    <span className="text-slate-700">{item.label}</span>
-                    <span className="font-mono text-slate-900">
+                    <span className="text-slate-700 dark:text-slate-200">{item.label}</span>
+                    <span className="font-mono text-slate-900 dark:text-white font-bold">
                       {item.count} ({pct}%)
                     </span>
                   </div>
-                  <div className="w-full h-2.5 bg-slate-100 rounded-full overflow-hidden">
+                  <div className="w-full h-2.5 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
                     <div
                       className={`h-full ${item.color} rounded-full transition-all duration-500`}
                       style={{ width: `${pct}%` }}
@@ -123,12 +122,12 @@ export const AnalyticsView: React.FC<{ analytics: ISessionAnalytics | null }> = 
               return (
                 <div key={idx} className="space-y-1.5">
                   <div className="flex justify-between text-xs font-semibold">
-                    <span className="text-slate-700">{item.label}</span>
-                    <span className="font-mono text-slate-900">
+                    <span className="text-slate-700 dark:text-slate-200">{item.label}</span>
+                    <span className="font-mono text-slate-900 dark:text-white font-bold">
                       {item.count} ({pct}%)
                     </span>
                   </div>
-                  <div className="w-full h-2.5 bg-slate-100 rounded-full overflow-hidden">
+                  <div className="w-full h-2.5 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
                     <div
                       className={`h-full ${item.color} rounded-full transition-all duration-500`}
                       style={{ width: `${pct}%` }}

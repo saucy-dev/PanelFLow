@@ -6,6 +6,7 @@ import { getSocket, joinRoom } from '../../socket/socketClient.js';
 import { QueueTicketCard } from '../../components/student/QueueTicketCard.js';
 import { AssignedAlert } from '../../components/student/AssignedAlert.js';
 import { LoadingSpinner } from '../../components/common/LoadingSpinner.js';
+import { ThemeToggle } from '../../components/common/ThemeToggle.js';
 import { Button } from '../../components/ui/Button.js';
 import { CheckCircle2, RefreshCw, Layers } from 'lucide-react';
 
@@ -54,10 +55,10 @@ export const QueueStatusPage: React.FC = () => {
 
   if (!queueEntry) {
     return (
-      <div className="min-h-screen bg-slate-100 flex flex-col items-center justify-center p-4">
-        <div className="bg-white p-8 rounded-3xl shadow-md text-center max-w-sm space-y-4">
-          <h2 className="text-lg font-bold text-slate-900">Queue Entry Not Found</h2>
-          <p className="text-xs text-slate-500">
+      <div className="min-h-screen bg-[#FFFCE1] dark:bg-[#0B0F19] flex flex-col items-center justify-center p-4">
+        <div className="bg-white/95 dark:bg-[#0F1626]/95 border border-[#FFDDB0] dark:border-slate-800 p-8 rounded-3xl shadow-md text-center max-w-sm space-y-4">
+          <h2 className="text-lg font-bold text-slate-900 dark:text-white">Queue Entry Not Found</h2>
+          <p className="text-xs text-slate-500 dark:text-slate-400">
             The specified queue ticket could not be found or has expired.
           </p>
           <Link to="/interview/join">
@@ -75,20 +76,25 @@ export const QueueStatusPage: React.FC = () => {
     queueEntry.assignedPanelId;
 
   return (
-    <div className="min-h-screen bg-slate-100 flex flex-col items-center justify-center p-4 sm:p-6 select-none">
+    <div className="min-h-screen bg-[#FFFCE1] dark:bg-[#0B0F19] flex flex-col items-center justify-center p-4 sm:p-6 select-none transition-colors duration-150 font-sans">
       <div className="w-full max-w-md space-y-4">
-        {/* Top Mini Brand Bar */}
+        {/* Top Mini Brand Bar & Theme Switcher */}
         <div className="flex items-center justify-between px-2">
-          <Link to="/" className="flex items-center gap-1.5 text-xs font-bold text-slate-600 hover:text-slate-900">
-            <Layers className="w-4 h-4 text-blue-600" />
+          <Link to="/" className="flex items-center gap-1.5 text-xs font-bold text-slate-700 dark:text-slate-200 hover:text-slate-900">
+            <div className="w-5 h-5 rounded-lg bg-[#FFBE91] text-amber-950 flex items-center justify-center">
+              <Layers className="w-3 h-3" />
+            </div>
             <span>PanelFlow</span>
           </Link>
-          <button
-            onClick={() => refetch()}
-            className="text-[11px] font-semibold text-blue-600 hover:text-blue-700 flex items-center gap-1 cursor-pointer"
-          >
-            <RefreshCw className="w-3 h-3" /> Refresh
-          </button>
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => refetch()}
+              className="text-[11px] font-semibold text-amber-900 dark:text-[#FFBE91] hover:underline flex items-center gap-1 cursor-pointer"
+            >
+              <RefreshCw className="w-3 h-3" /> Refresh
+            </button>
+            <ThemeToggle />
+          </div>
         </div>
 
         {/* Dynamic Assignment Alert if Called! */}
@@ -101,13 +107,13 @@ export const QueueStatusPage: React.FC = () => {
 
         {/* If Completed */}
         {queueEntry.status === 'COMPLETED' ? (
-          <div className="bg-white rounded-3xl p-8 border border-slate-200 text-center shadow-lg space-y-4">
-            <div className="w-16 h-16 rounded-full bg-teal-50 text-teal-600 flex items-center justify-center mx-auto">
+          <div className="bg-white/95 dark:bg-[#0F1626]/95 rounded-3xl p-8 border border-[#FFDDB0] dark:border-slate-800 text-center shadow-lg space-y-4">
+            <div className="w-16 h-16 rounded-full bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 flex items-center justify-center mx-auto">
               <CheckCircle2 className="w-10 h-10" />
             </div>
             <div className="space-y-1">
-              <h2 className="text-xl font-black text-slate-900">Interview Completed!</h2>
-              <p className="text-xs text-slate-500">
+              <h2 className="text-xl font-black text-slate-900 dark:text-white">Interview Completed!</h2>
+              <p className="text-xs text-slate-500 dark:text-slate-400">
                 Thank you for participating in the interview round. The club coordinators will announce the final results
                 soon.
               </p>

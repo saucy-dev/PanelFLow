@@ -9,13 +9,13 @@ import { SOCKET_EVENTS } from '../sockets/socketEvents.js';
 
 export interface JoinQueueInput {
   sessionId?: string;
-  registrationNumber: string;
-  name: string;
-  email: string;
-  branch: string;
-  year: number | string;
+  registrationNumber?: string;
+  email?: string;
+  name?: string;
+  branch?: string;
+  year?: number | string;
   phone?: string;
-  domainPreferences: Array<{
+  domainPreferences?: Array<{
     domainId: string;
     priority: number;
   }>;
@@ -38,42 +38,66 @@ export class QueueService {
       throw { statusCode: 400, message: 'Student registration is currently closed by the administrator.' };
     }
 
-    const regNo = input.registrationNumber.trim().toUpperCase();
+    const regNo = input.registrationNumber?.trim().toUpperCase();
+    const email = input.email?.trim().toLowerCase();
 
-    // 1. Check or Upsert Student
-    let student = await Student.findOne({ registrationNumber: regNo });
-
-    // Validate domain IDs
-    const domainIds = input.domainPreferences.map((p) => new mongoose.Types.ObjectId(p.domainId));
-    const validDomains = await Domain.find({ _id: { $in: domainIds } });
-    if (validDomains.length !== domainIds.length) {
-      throw { statusCode: 400, message: 'One or more selected domains are invalid.' };
+    if (!regNo && !email) {
+      throw { statusCode: 400, message: 'Please provide either a Registration Number or Email Address.' };
     }
 
-    const formattedPreferences = input.domainPreferences.map((p) => ({
-      domainId: new mongoose.Types.ObjectId(p.domainId),
-      priority: p.priority,
-    }));
+    // 1. Lookup existing student from synced records (e.g. from Excel/Sheets or previous joins)
+    const lookupConditions: any[] = [];
+    if (regNo) lookupConditions.push({ registrationNumber: regNo });
+    if (email) lookupConditions.push({ email: email });
+
+    let student = await Student.findOne({ $or: lookupConditions });
+
+    // Handle domain preferences
+    let formattedPreferences: Array<{ domainId: mongoose.Types.ObjectId; priority: number }> = [];
+
+    if (input.domainPreferences && input.domainPreferences.length > 0) {
+      const domainIds = input.domainPreferences.map((p) => new mongoose.Types.ObjectId(p.domainId));
+      const validDomains = await Domain.find({ _id: { $in: domainIds } });
+      if (validDomains.length > 0) {
+        formattedPreferences = input.domainPreferences.map((p) => ({
+          domainId: new mongoose.Types.ObjectId(p.domainId),
+          priority: p.priority,
+        }));
+      }
+    }
 
     if (!student) {
+      // If student not found in pre-imported records, create them with defaults
+      if (formattedPreferences.length === 0) {
+        const allDomains = await Domain.find().limit(5);
+        formattedPreferences = allDomains.map((d, idx) => ({
+          domainId: d._id as mongoose.Types.ObjectId,
+          priority: idx + 1,
+        }));
+      }
+
       student = await Student.create({
-        registrationNumber: regNo,
-        name: input.name.trim(),
-        email: input.email.trim().toLowerCase(),
-        branch: input.branch.trim(),
-        year: input.year,
+        registrationNumber: regNo || `REG-${Date.now().toString().slice(-4)}`,
+        name: input.name?.trim() || (regNo ? `Candidate ${regNo}` : `Candidate ${email?.split('@')[0]}`),
+        email: email || `${regNo?.toLowerCase()}@student.college.edu`,
+        branch: input.branch?.trim() || 'CSE',
+        year: input.year || 1,
         phone: input.phone || '',
         domainPreferences: formattedPreferences,
         status: 'IN_QUEUE',
       });
     } else {
-      // Update existing student details & preferences
-      student.name = input.name.trim();
-      student.email = input.email.trim().toLowerCase();
-      student.branch = input.branch.trim();
-      student.year = input.year;
-      student.phone = input.phone || student.phone;
-      student.domainPreferences = formattedPreferences;
+      // Student was found in synced database records!
+      // If input provided new details, update them; otherwise keep pre-synced details
+      if (input.name?.trim()) student.name = input.name.trim();
+      if (email) student.email = email;
+      if (regNo) student.registrationNumber = regNo;
+      if (input.branch?.trim()) student.branch = input.branch.trim();
+      if (input.year) student.year = input.year;
+      if (input.phone) student.phone = input.phone;
+      if (formattedPreferences.length > 0) {
+        student.domainPreferences = formattedPreferences;
+      }
       student.status = 'IN_QUEUE';
       await student.save();
     }
@@ -199,7 +223,7 @@ export class QueueService {
   }
 
   /**
-   * Get Student Queue Status by Registration Number or Queue ID
+   * Get Student Queue Status by Registration Number, Email, or Queue ID
    */
   static async getStudentQueueStatus(identifier: string) {
     const session = await SessionService.getActiveSession();
@@ -208,7 +232,13 @@ export class QueueService {
     if (mongoose.Types.ObjectId.isValid(identifier)) {
       query._id = identifier;
     } else {
-      const student = await Student.findOne({ registrationNumber: identifier.toUpperCase().trim() });
+      const clean = identifier.trim();
+      const student = await Student.findOne({
+        $or: [
+          { registrationNumber: clean.toUpperCase() },
+          { email: clean.toLowerCase() },
+        ],
+      });
       if (!student) {
         throw { statusCode: 404, message: 'Student not found.' };
       }

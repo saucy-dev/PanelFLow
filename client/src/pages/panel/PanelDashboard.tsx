@@ -85,10 +85,10 @@ export const PanelDashboard: React.FC = () => {
 
   if (!panel) {
     return (
-      <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4">
-        <div className="bg-white p-8 rounded-2xl border text-center max-w-md">
-          <h2 className="text-lg font-bold text-slate-900">Panel Not Found</h2>
-          <p className="text-xs text-slate-500 mt-1">
+      <div className="min-h-screen bg-[#FFFCE1] dark:bg-[#0B0F19] flex items-center justify-center p-4">
+        <div className="bg-white dark:bg-[#0F1626] p-8 rounded-2xl border border-[#FFDDB0] dark:border-slate-800 text-center max-w-md">
+          <h2 className="text-lg font-bold text-slate-900 dark:text-white">Panel Not Found</h2>
+          <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
             Unable to load panel details. Please check the panel code.
           </p>
         </div>
@@ -97,7 +97,7 @@ export const PanelDashboard: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col">
+    <div className="min-h-screen bg-[#FFFCE1] dark:bg-[#0B0F19] flex flex-col transition-colors duration-150 font-sans">
       <Navbar />
 
       <main className="flex-1 max-w-5xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">

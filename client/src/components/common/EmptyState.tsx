@@ -17,12 +17,12 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
   actionLabel,
   onAction,
 }) => (
-  <div className="flex flex-col items-center justify-center p-8 text-center bg-slate-50/50 rounded-xl border border-dashed border-slate-200">
-    <div className="w-12 h-12 rounded-2xl bg-slate-100 flex items-center justify-center text-slate-400 mb-3">
+  <div className="flex flex-col items-center justify-center p-8 text-center bg-slate-50/50 dark:bg-slate-900/50 rounded-2xl border border-dashed border-slate-200 dark:border-slate-800 transition-colors">
+    <div className="w-12 h-12 rounded-2xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-400 dark:text-slate-300 mb-3">
       <Icon className="w-6 h-6" />
     </div>
-    <h4 className="text-sm font-semibold text-slate-900 mb-1">{title}</h4>
-    <p className="text-xs text-slate-500 max-w-sm mb-4 leading-relaxed">{description}</p>
+    <h4 className="text-sm font-bold text-slate-900 dark:text-white mb-1">{title}</h4>
+    <p className="text-xs text-slate-500 dark:text-slate-300 max-w-sm mb-4 leading-relaxed">{description}</p>
     {actionLabel && onAction && (
       <Button size="sm" variant="primary" onClick={onAction}>
         {actionLabel}
@@ -33,7 +33,7 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
 
 export const LoadingSpinner: React.FC<{ message?: string }> = ({ message = 'Loading real-time data...' }) => (
   <div className="flex flex-col items-center justify-center min-h-[300px] p-6 space-y-3">
-    <div className="w-8 h-8 rounded-full border-3 border-blue-600 border-t-transparent animate-spin" />
-    <p className="text-xs font-medium text-slate-500">{message}</p>
+    <div className="w-8 h-8 rounded-full border-3 border-[#FFBE91] border-t-transparent animate-spin" />
+    <p className="text-xs font-medium text-slate-500 dark:text-slate-300">{message}</p>
   </div>
 );

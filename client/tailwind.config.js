@@ -8,31 +8,37 @@ export default {
   theme: {
     extend: {
       colors: {
-        background: 'hsl(var(--background))',
-        foreground: 'hsl(var(--foreground))',
+        palette: {
+          peach: '#FFBE91',
+          peachDark: '#EA9661',
+          apricot: '#FFDDB0',
+          apricotDark: '#E2B882',
+          cream: '#FFFCE1',
+          creamLight: '#FFFDF0',
+          ice: '#CFEBFF',
+          iceDark: '#93C5FD',
+        },
+        background: '#FFFCE1',
+        foreground: '#1E293B',
         card: {
-          DEFAULT: 'hsl(var(--card))',
-          foreground: 'hsl(var(--card-foreground))',
+          DEFAULT: '#FFFFFF',
+          foreground: '#1E293B',
         },
         primary: {
-          DEFAULT: 'hsl(var(--primary))',
-          foreground: 'hsl(var(--primary-foreground))',
+          DEFAULT: '#FFBE91',
+          hover: '#F5A875',
+          foreground: '#431407',
         },
         secondary: {
-          DEFAULT: 'hsl(var(--secondary))',
-          foreground: 'hsl(var(--secondary-foreground))',
+          DEFAULT: '#FFDDB0',
+          hover: '#F2CCA0',
+          foreground: '#78350F',
         },
-        muted: {
-          DEFAULT: 'hsl(var(--muted))',
-          foreground: 'hsl(var(--muted-foreground))',
+        ice: {
+          DEFAULT: '#CFEBFF',
+          hover: '#BAE2FE',
+          foreground: '#0369A1',
         },
-        accent: {
-          DEFAULT: 'hsl(var(--accent))',
-          foreground: 'hsl(var(--accent-foreground))',
-        },
-        border: 'hsl(var(--border))',
-        input: 'hsl(var(--input))',
-        ring: 'hsl(var(--ring))',
         status: {
           available: {
             bg: '#ECFDF5',
@@ -59,10 +65,10 @@ export default {
             dot: '#9CA3AF',
           },
           assigned: {
-            bg: '#EFF6FF',
-            text: '#1D4ED8',
-            border: '#BFDBFE',
-            dot: '#3B82F6',
+            bg: '#CFEBFF',
+            text: '#0369A1',
+            border: '#BAE2FE',
+            dot: '#0284C7',
           },
           interviewing: {
             bg: '#FAF5FF',
