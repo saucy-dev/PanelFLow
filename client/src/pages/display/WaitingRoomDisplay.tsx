@@ -236,11 +236,10 @@ export const WaitingRoomDisplay: React.FC = () => {
               <button
                 key={p.val}
                 onClick={() => setPreset(p.val)}
-                className={`px-2 py-0.5 rounded-lg transition-all cursor-pointer ${
-                  Math.abs(leftWidth - p.val) <= 3
-                    ? 'bg-[#FFBE91] text-amber-950 shadow-2xs font-extrabold'
-                    : 'text-slate-400 hover:text-white hover:bg-slate-800'
-                }`}
+                className={`px-2 py-0.5 rounded-lg transition-all cursor-pointer ${Math.abs(leftWidth - p.val) <= 3
+                  ? 'bg-[#FFBE91] text-amber-950 shadow-2xs font-extrabold'
+                  : 'text-slate-400 hover:text-white hover:bg-slate-800'
+                  }`}
               >
                 {p.label}
               </button>
@@ -266,9 +265,8 @@ export const WaitingRoomDisplay: React.FC = () => {
         {/* Left: NOW CALLING (Dynamic Width - Zero Transition Lag While Dragging) */}
         <div
           style={{ width: `${leftWidth}%` }}
-          className={`flex flex-col h-full min-h-0 space-y-2.5 overflow-hidden pr-1.5 ${
-            isDraggingX ? 'transition-none pointer-events-none' : 'transition-[width] duration-100'
-          }`}
+          className={`flex flex-col h-full min-h-0 space-y-2.5 overflow-hidden pr-1.5 ${isDraggingX ? 'transition-none pointer-events-none' : 'transition-[width] duration-100'
+            }`}
         >
           <div className="flex items-center justify-between pb-1 border-b border-slate-800 shrink-0 px-1">
             <h2 className="text-xs sm:text-sm font-extrabold uppercase tracking-wider text-[#FFBE91] flex items-center gap-2">
@@ -343,17 +341,15 @@ export const WaitingRoomDisplay: React.FC = () => {
         {/* Draggable Vertical Splitter Handle (Left vs Right) */}
         <div
           onPointerDown={handlePointerDownX}
-          className={`w-3.5 hover:w-4 flex items-center justify-center cursor-col-resize group shrink-0 transition-colors z-30 touch-none ${
-            isDraggingX ? 'bg-[#FFBE91]/20' : 'hover:bg-slate-800/60'
-          }`}
+          className={`w-3.5 hover:w-4 flex items-center justify-center cursor-col-resize group shrink-0 transition-colors z-30 touch-none ${isDraggingX ? 'bg-[#FFBE91]/20' : 'hover:bg-slate-800/60'
+            }`}
           title="Drag horizontally to resize columns"
         >
           <div
-            className={`w-1 rounded-full flex items-center justify-center transition-all ${
-              isDraggingX
-                ? 'h-16 bg-[#FFBE91] shadow-md shadow-[#FFBE91]/40'
-                : 'h-10 bg-slate-700 group-hover:bg-[#FFBE91] group-hover:h-14'
-            }`}
+            className={`w-1 rounded-full flex items-center justify-center transition-all ${isDraggingX
+              ? 'h-16 bg-[#FFBE91] shadow-md shadow-[#FFBE91]/40'
+              : 'h-10 bg-slate-700 group-hover:bg-[#FFBE91] group-hover:h-14'
+              }`}
           >
             <GripVertical className="w-2.5 h-2.5 text-slate-950 opacity-0 group-hover:opacity-100 transition-opacity" />
           </div>
@@ -363,16 +359,14 @@ export const WaitingRoomDisplay: React.FC = () => {
         <div
           ref={rightColRef}
           style={{ width: `${100 - leftWidth}%` }}
-          className={`flex flex-col h-full min-h-0 overflow-hidden pl-1.5 ${
-            isDraggingX ? 'transition-none pointer-events-none' : 'transition-[width] duration-100'
-          }`}
+          className={`flex flex-col h-full min-h-0 overflow-hidden pl-1.5 ${isDraggingX ? 'transition-none pointer-events-none' : 'transition-[width] duration-100'
+            }`}
         >
           {/* Top: Integrated On-Screen QR Code Check-In Box (Auto-Scaling QR Size) */}
           <div
             style={{ height: `${qrHeight}%` }}
-            className={`bg-[#0F1626] rounded-2xl border border-[#FFDDB0]/30 shadow-md p-3 sm:p-4 shrink-0 overflow-hidden flex ${
-              isDraggingY ? 'transition-none pointer-events-none' : 'transition-[height] duration-100'
-            } ${isTallQr ? 'flex-row items-center gap-4 sm:gap-6' : 'flex-row items-center gap-3.5'}`}
+            className={`bg-[#0F1626] rounded-2xl border border-[#FFDDB0]/30 shadow-md p-3 sm:p-4 shrink-0 overflow-hidden flex ${isDraggingY ? 'transition-none pointer-events-none' : 'transition-[height] duration-100'
+              } ${isTallQr ? 'flex-row items-center gap-4 sm:gap-6' : 'flex-row items-center gap-3.5'}`}
           >
             {/* Auto-Expanding QR Code Container (Stretches to 100% of Box Height) */}
             <div className="h-full aspect-square max-h-full bg-white p-2 rounded-2xl shadow-lg border-2 border-[#FFDDB0] flex items-center justify-center shrink-0">
@@ -408,17 +402,15 @@ export const WaitingRoomDisplay: React.FC = () => {
           {/* Draggable Horizontal Splitter Handle (QR vs Up Next) */}
           <div
             onPointerDown={handlePointerDownY}
-            className={`h-3.5 hover:h-4 w-full flex items-center justify-center cursor-row-resize group shrink-0 transition-colors z-30 my-0.5 touch-none ${
-              isDraggingY ? 'bg-[#FFBE91]/20' : 'hover:bg-slate-800/60'
-            }`}
+            className={`h-3.5 hover:h-4 w-full flex items-center justify-center cursor-row-resize group shrink-0 transition-colors z-30 my-0.5 touch-none ${isDraggingY ? 'bg-[#FFBE91]/20' : 'hover:bg-slate-800/60'
+              }`}
             title="Drag vertically to resize QR Code vs Queue List"
           >
             <div
-              className={`h-1 rounded-full flex items-center justify-center transition-all ${
-                isDraggingY
-                  ? 'w-20 bg-[#FFBE91] shadow-md shadow-[#FFBE91]/40'
-                  : 'w-12 bg-slate-700 group-hover:bg-[#FFBE91] group-hover:w-16'
-              }`}
+              className={`h-1 rounded-full flex items-center justify-center transition-all ${isDraggingY
+                ? 'w-20 bg-[#FFBE91] shadow-md shadow-[#FFBE91]/40'
+                : 'w-12 bg-slate-700 group-hover:bg-[#FFBE91] group-hover:w-16'
+                }`}
             >
               <GripHorizontal className="w-2.5 h-2.5 text-slate-950 opacity-0 group-hover:opacity-100 transition-opacity" />
             </div>
@@ -460,11 +452,10 @@ export const WaitingRoomDisplay: React.FC = () => {
                       </div>
 
                       <span
-                        className={`text-[9.5px] font-bold px-2 py-0.5 rounded-md uppercase shrink-0 ${
-                          idx === 0
-                            ? 'bg-[#FFDDB0] text-amber-950'
-                            : 'bg-slate-800/80 text-slate-400'
-                        }`}
+                        className={`text-[9.5px] font-bold px-2 py-0.5 rounded-md uppercase shrink-0 ${idx === 0
+                          ? 'bg-[#FFDDB0] text-amber-950'
+                          : 'bg-slate-800/80 text-slate-400'
+                          }`}
                       >
                         {idx === 0 ? 'Next' : `Ahead: ${idx}`}
                       </span>

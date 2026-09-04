@@ -4,17 +4,21 @@
 
 @layer base {
   :root {
-    --background: 54 100% 94%; /* #FFFCE1 */
+    --background: 54 100% 94%;
+    /* #FFFCE1 */
     --foreground: 222 47% 11%;
     --card: 0 0% 100%;
     --card-foreground: 222 47% 11%;
-    --primary: 24 100% 78%; /* #FFBE91 */
+    --primary: 24 100% 78%;
+    /* #FFBE91 */
     --primary-foreground: 15 80% 16%;
-    --secondary: 34 100% 85%; /* #FFDDB0 */
+    --secondary: 34 100% 85%;
+    /* #FFDDB0 */
     --secondary-foreground: 28 80% 20%;
     --muted: 54 60% 90%;
     --muted-foreground: 215.4 16.3% 46.9%;
-    --accent: 205 100% 90%; /* #CFEBFF */
+    --accent: 205 100% 90%;
+    /* #CFEBFF */
     --accent-foreground: 202 80% 24%;
     --border: 34 50% 88%;
     --input: 34 50% 88%;
@@ -22,13 +26,17 @@
   }
 
   .dark {
-    --background: 222 47% 7%; /* #0B0F19 */
+    --background: 222 47% 7%;
+    /* #0B0F19 */
     --foreground: 210 40% 98%;
-    --card: 222 47% 11%; /* #111726 */
+    --card: 222 47% 11%;
+    /* #111726 */
     --card-foreground: 210 40% 98%;
-    --primary: 24 100% 78%; /* #FFBE91 */
+    --primary: 24 100% 78%;
+    /* #FFBE91 */
     --primary-foreground: 15 80% 16%;
-    --secondary: 34 100% 85%; /* #FFDDB0 */
+    --secondary: 34 100% 85%;
+    /* #FFDDB0 */
     --secondary-foreground: 28 80% 20%;
     --muted: 217 33% 17%;
     --muted-foreground: 215 20% 65%;
@@ -44,7 +52,7 @@ body {
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
   background-color: #FFFCE1;
   background-image: radial-gradient(at 100% 0%, rgba(207, 235, 255, 0.45) 0px, transparent 50%),
-                    radial-gradient(at 0% 100%, rgba(255, 190, 145, 0.3) 0px, transparent 50%);
+    radial-gradient(at 0% 100%, rgba(255, 190, 145, 0.3) 0px, transparent 50%);
   background-attachment: fixed;
   color: #0f172a;
   -webkit-font-smoothing: antialiased;
@@ -56,7 +64,7 @@ body {
 html.dark body {
   background-color: #0B0F19;
   background-image: radial-gradient(at 100% 0%, rgba(207, 235, 255, 0.06) 0px, transparent 50%),
-                    radial-gradient(at 0% 100%, rgba(255, 190, 145, 0.05) 0px, transparent 50%);
+    radial-gradient(at 0% 100%, rgba(255, 190, 145, 0.05) 0px, transparent 50%);
   color: #F8FAFC;
 }
 
@@ -95,10 +103,13 @@ html.dark ::-webkit-scrollbar-thumb:hover {
 
 /* Subtle live pulse animation */
 @keyframes live-pulse {
-  0%, 100% {
+
+  0%,
+  100% {
     transform: scale(1);
     opacity: 1;
   }
+
   50% {
     transform: scale(1.25);
     opacity: 0.5;

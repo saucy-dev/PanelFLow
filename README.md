@@ -2,6 +2,10 @@
 
 A production-grade, real-time web application engineered for high-traffic university club recruitments, hackathon team screenings, and multi-panel interview sessions. PanelFlow replaces manual paper-based queues with an authoritative real-time control center, immutable sequential queue ordering, human-in-the-loop domain matching, atomic race-condition concurrency protection, Google Sheets integration, interactive split-screen projector displays, and live WebSocket multi-screen synchronization.
 
+<div align="center">
+  <img src="imgs/admin.png" alt="PanelFlow Admin Control Center" width="100%" />
+</div>
+
 ---
 
 ## 1. Core Product Philosophy
@@ -70,6 +74,43 @@ graph TD
 | **Candidate Live Status** | `/interview/queue/:regNo` | Mobile-first live queue ticket showing exact count ahead, estimated wait time, and pulsating assignment alert with room directions when called. |
 | **Session Analytics** | `/admin/analytics` | Real-time session throughput, average wait times, longest wait, interview durations, candidate funnel, and panel utilization rate. |
 | **Audit Trail & Event Log** | `/admin/audit` | Chronological event stream recording registrations, assignments, panel status shifts, interviewer modifications, and Google Sheets imports. |
+
+### Visual Showcase
+
+#### 3.1 Admin Control Center (`/admin`)
+The central coordinator cockpit featuring a 2-pane responsive layout: an immutable sequential waiting queue on the left with ranked preference badges and smart one-click domain-matched quick assignments, alongside live panel cards displaying interviewer rosters, room locations, and status controls.
+
+<div align="center">
+  <img src="imgs/admin.png" alt="Admin Control Center" width="100%" />
+</div>
+
+#### 3.2 Panels & Interviewers Management (`/admin/panels`)
+Full CRUD management for interview panels, allowing administrators to configure room locations, assign interviewers with specific domain specializations (e.g., AR/VR, IoT, ML, Web, Android), and monitor availability.
+
+<div align="center">
+  <img src="imgs/panels.png" alt="Panels & Teams Management" width="100%" />
+</div>
+
+#### 3.3 Dedicated Interviewer Workstation (`/panel/:panelCode`)
+Distraction-free panel dashboard showing active candidate details, ranked domain preferences, live stopwatch timer, and an animated, confetti-triggering **Interview Complete** action button.
+
+<div align="center">
+  <img src="imgs/panel1.png" alt="Interviewer Workstation" width="100%" />
+</div>
+
+#### 3.4 Waiting Room Projector & TV Display (`/display`)
+High-contrast Cinema Dark split-screen kiosk designed for auditorium projectors and waiting room TVs. Features zero-latency interactive dual-axis resizers, real-time "Now Calling / In Interview" panel grid, dynamic scan-to-join QR code, and "Up Next in Queue" live ticker.
+
+<div align="center">
+  <img src="imgs/display.png" alt="Waiting Room TV Display" width="100%" />
+</div>
+
+#### 3.5 Session Analytics & Live Metrics (`/admin/analytics`)
+Real-time recruitment telemetry providing live visibility into average candidate wait times, interview durations, panel utilization rates, candidate funnel breakdown, and panel status distribution.
+
+<div align="center">
+  <img src="imgs/analysis.png" alt="Session Analytics & Metrics" width="100%" />
+</div>
 
 ---
 

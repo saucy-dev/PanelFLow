@@ -38,7 +38,7 @@ async function bootstrap() {
   initSocketServer(io);
 
   // 5. Start Listening
-  server.listen(env.PORT, () => {
+  server.listen(env.PORT, '0.0.0.0', () => {
     console.log(`\n======================================================`);
     console.log(`🎉 PanelFlow Backend Server Running!`);
     console.log(`🌐 URL: http://localhost:${env.PORT}`);

@@ -3,6 +3,9 @@ import { io, Socket } from 'socket.io-client';
 let socket: Socket | null = null;
 
 const getSocketServerUrl = (): string => {
+  if (import.meta.env.VITE_API_URL) {
+    return import.meta.env.VITE_API_URL;
+  }
   if (typeof window !== 'undefined') {
     // When running on Vite dev server (default port 5173), connect directly to backend (port 5000)
     // to prevent Vite proxy WebSocket ping timeouts and disconnection loops

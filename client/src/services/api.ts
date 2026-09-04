@@ -1,4 +1,5 @@
-const BASE_URL = '/api';
+const API_ORIGIN = import.meta.env.VITE_API_URL || '';
+const BASE_URL = `${API_ORIGIN}/api`;
 
 export class ApiError extends Error {
   statusCode: number;
@@ -33,11 +34,33 @@ export async function request<T>(endpoint: string, options: RequestInit = {}): P
 
   try {
     const response = await fetch(url, config);
-    const result = await response.json();
+
+    // Safely parse response text to guard against empty bodies, HTML pages, or proxy errors
+    const text = await response.text();
+    let result: any = null;
+
+    if (text) {
+      try {
+        result = JSON.parse(text);
+      } catch {
+        // Response is not JSON (e.g., HTML error page, proxy error, plain text)
+        result = {
+          success: false,
+          message: text.length < 150 ? text : `Server returned non-JSON response (${response.status})`,
+        };
+      }
+    } else {
+      result = {};
+    }
 
     if (!response.ok || result.success === false) {
+      const fallbackMsg =
+        response.status === 502 || response.status === 504
+          ? 'Backend server is currently offline or unreachable. Please ensure "npm run dev" or the backend server is running.'
+          : `Request failed with status ${response.status}`;
+
       throw new ApiError(
-        result.message || `Request failed with status ${response.status}`,
+        result.message || fallbackMsg,
         response.status,
         result.errors
       );
