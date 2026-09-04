@@ -1,4 +1,4 @@
-# PanelFlow — Real-Time Club Interview Management System
+# PanelFlow — Real-Time Interview Management System
 
 A production-grade, real-time web application engineered for high-traffic university club recruitments, hackathon team screenings, and multi-panel interview sessions. PanelFlow replaces manual paper-based queues with an authoritative real-time control center, immutable sequential queue ordering, human-in-the-loop domain matching, atomic race-condition concurrency protection, Google Sheets integration, interactive split-screen projector displays, and live WebSocket multi-screen synchronization.
 
